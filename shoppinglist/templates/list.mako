@@ -72,8 +72,21 @@
         var item_of = function(dom_node) {
             return $(dom_node).closest("li");
         };
+        var item_id_callbacks = function(li) {
+            var dom_node = li[0];
+            return dom_node._item_id_callbacks || [];
+        }
+        var add_item_id_callback = function(li, callback) {
+            var dom_node = li[0];
+            var callbacks = dom_node._item_id_callbacks || [];
+            callbacks.push(callback);
+            dom_node._item_id_callbacks = callbacks;
+        }
         var set_item_id = function(li, id) {
-            return li.find('input').val(id);
+            li.find('input').val(id);
+            $.each(item_id_callbacks(li), function(idx, callback) {
+                callback.apply();
+            });
         };
         var get_item_id = function(li) {
             return li.find('input').val();
@@ -97,10 +110,13 @@
             if (path.search(/{id}/) != -1) {
                 var item_id = get_item_id(settings.li);
                 if (!item_id) {
-                    console.log('abort! abort!', item_id, settings.li);
+                    // item_id may not be set if we've just added an item
+                    // and hadn't heard from the AJAX callback yet
+                    add_item_id_callback(settings.li, function() {
+                        api_call(method, path, settings);
+                    });
+                    return;
                 }
-                // XXX item_id may not be set if we've just added an item
-                // and hadn't heard from the AJAX callback yet
                 path = path.replace('{id}', item_id);
             }
             // XXX PUT and DELETE not supported by all browsers, say the docs
