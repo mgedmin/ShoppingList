@@ -1,7 +1,7 @@
 pypackage = ShoppingList
 egg_link = lib/python*/site-packages/$(pypackage).egg-link
 
-all: bin/pcreate bin/pserve $(egg_link) bin/nosetests
+all: bin/pcreate bin/pserve $(egg_link) bin/nosetests ShoppingList.db
 
 run: bin/pserve $(egg_link)
 	bin/pserve development.ini --reload
@@ -30,6 +30,9 @@ dist: bin/python
 distclean: clean
 	rm -rf bin/ dist/ include/ lib/ *.egg-info/ build/
 	rm -f local .coverage tags
+
+ShoppingList.db: $(egg_link)
+	test -f $@ || bin/initialize_ShoppingList_db development.ini
 
 $(egg_link): bin/python setup.py
 	bin/python setup.py develop
