@@ -20,6 +20,7 @@ var:
 update-all-packages: bin/pip
 	bin/pip install -U nose pyramid pyramid_debugtoolbar waitress
 	make
+	make update-requirements
 
 update-requirements: bin/pip
 	PYTHONPATH= bin/pip freeze | grep -v '^-e .*$(pypackage)-dev$$' > requirements.txt
