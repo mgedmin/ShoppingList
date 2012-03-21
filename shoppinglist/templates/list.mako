@@ -85,9 +85,14 @@
         }
         var set_item_id = function(li, id) {
             li.find('input').val(id);
-            $.each(item_id_callbacks(li), function(idx, callback) {
-                callback.apply();
-            });
+            if (id) {
+                var dom_node = li[0];
+                var callbacks = dom_node._item_id_callbacks || [];
+                dom_node._item_id_callbacks = [];
+                $.each(callbacks, function(idx, callback) {
+                    callback.apply();
+                });
+            }
         };
         var get_item_id = function(li) {
             return li.find('input').val();
