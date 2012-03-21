@@ -8,7 +8,7 @@ from .models import (
     ListItem,
     )
 
-@view_config(route_name='home', renderer='templates/mytemplate.pt')
+@view_config(route_name='home', renderer='shoppinglist:templates/list.mako')
 def my_view(request):
     try:
         items = DBSession.query(ListItem).all()
