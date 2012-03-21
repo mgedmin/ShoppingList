@@ -13,7 +13,7 @@ def main(global_config, **settings):
     config.add_route('home',         '/')
     # Let's go nuts with REST, why don't we?
     config.add_route('list_items',   '/api/items', request_method='GET')
-    config.add_route('add_item',     '/api/items/add', request_method='POST')
+    config.add_route('add_item',     '/api/items', request_method='POST')
     config.add_route('remove_item',  '/api/items/{id}', request_method='DELETE')
     config.add_route('check_item',   '/api/items/{id}/checked', request_method='POST')
     config.add_route('uncheck_item', '/api/items/{id}/checked', request_method='DELETE')
