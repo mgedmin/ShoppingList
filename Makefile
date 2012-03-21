@@ -3,7 +3,7 @@ egg_link = lib/python*/site-packages/$(pypackage).egg-link
 
 all: bin/pcreate bin/pserve $(egg_link) bin/nosetests ShoppingList.db
 
-run: bin/pserve $(egg_link)
+run: bin/pserve $(egg_link) ShoppingList.db
 	bin/pserve development.ini --reload
 
 test: bin/nosetests
