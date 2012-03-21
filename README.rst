@@ -31,7 +31,7 @@ Deployment
 Here's a sample Apache config::
 
   WSGIScriptAlias /list "/opt/ShoppingList/pyramid.wsgi"
-  WSGIDaemonProcess shoppinglist user=buildbot group=buildbot processes=2 threads=5 \
+  WSGIDaemonProcess shoppinglist user=www-data group=www-data processes=2 threads=5 \
     maximum-requests=1000 umask=0007 display-name=wsgi-shoppinglist \
     python-path=/opt/ShoppingList/lib/python2.6/site-packages
   WSGIProcessGroup shoppinglist
