@@ -1,4 +1,4 @@
-pypackage = shoppinglist
+pypackage = ShoppingList
 egg_link = lib/python*/site-packages/$(pypackage).egg-link
 
 all: bin/pcreate bin/pserve $(egg_link) bin/nosetests
@@ -14,7 +14,7 @@ update-all-packages: bin/pip
 	make
 
 update-requirements: bin/pip
-	PYTHONPATH= bin/pip freeze | grep -v '^-e .*-dev$$' > requirements.txt
+	PYTHONPATH= bin/pip freeze | grep -v '^-e .*$(pypackage)-dev$$' > requirements.txt
 
 update:
 	git pull
