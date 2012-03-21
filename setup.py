@@ -17,7 +17,7 @@ requires = [
     ]
 
 setup(name='ShoppingList',
-      version='0.0',
+      version='0.1',
       description='ShoppingList',
       long_description=README + '\n\n' +  CHANGES,
       classifiers=[

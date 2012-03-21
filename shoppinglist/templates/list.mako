@@ -53,6 +53,7 @@
   <script src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
   <script src="http://code.jquery.com/mobile/1.1.0-rc.1/jquery.mobile-1.1.0-rc.1.min.js"></script>
 ## XXX I do not trust json.dumps to escape everything properly for HTML embedding
+## For instance, add a shopping list item '</script>', reload page, watch it break horribly
 <%! import json %>
   <script type="text/javascript">
     $(function(){

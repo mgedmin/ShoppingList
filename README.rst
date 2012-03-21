@@ -1,7 +1,13 @@
 ShoppingList README
 ===================
 
-Small web-based shopping list application for me.
+Small web-based shopping list application for me:
+
+* There is one and only one shopping list per deployment
+* It can be accessed (and edited) from multiple browsers, desktop and mobile
+* There are no user accounts and no access control (but you can use Apache's)
+* There are no update notifications yet: you have to manually reload the
+  page to see the changes if anyone else edited it
 
 
 Running a development version
@@ -13,16 +19,6 @@ After cloning this repository do ::
 
 Make should take care of everything.  You need make (obviously), python,
 virtualenv, and an Internet connection (to download Pyramid etc. from PyPI).
-
-
-Security
---------
-
-There is none.  Use a front-end server like Apache with mod_wsgi to prevent
-unauthorized access.  Do not use ``make run`` or ``bin/pserve development.ini``
-on a multi-user machine.
-
-But, hey, it's just a shopping list.
 
 
 Deployment
@@ -47,3 +43,9 @@ If you also want password-protection, add ::
   </Location>
 
 and be sure to use HTTPS.
+
+You'll want to create a database writable to the 'www-data' user in the ``var``
+subdirectory (``production.ini`` looks for it there)::
+
+  sudo make prod-db
+

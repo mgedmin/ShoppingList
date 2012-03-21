@@ -9,6 +9,14 @@ run: bin/pserve $(egg_link) ShoppingList.db
 test: bin/nosetests
 	bin/nosetests
 
+prod-db: var/ShoppingList.db
+
+var/ShoppingList.db: ShoppingList.db var
+	install -m 644 -o www-data -g www-data ShoppingList.db var/ShoppingList.db
+
+var:
+	install -m 755 -o www-data -g www-data -d var || rmdir var
+
 update-all-packages: bin/pip
 	bin/pip install -U nose pyramid pyramid_debugtoolbar waitress
 	make
