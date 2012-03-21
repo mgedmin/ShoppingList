@@ -50,6 +50,8 @@ def add_item(request):
     if not title:
         return {'error': "'title' parameter blank or missing"}
     item = ListItem(title)
+    if request.POST.get('checked', '').lower() == 'true':
+        item.checked = True
     DBSession.add(item)
     DBSession.flush() # force ID allocation
     return {'success': 'added "%s"' % title, 'id': item.id}

@@ -45,6 +45,27 @@ class TestMyView(unittest.TestCase):
         self.assertEqual(info['success'], 'added "apples"')
         item = DBSession.query(ListItem).filter_by(id=info['id']).one()
         self.assertEqual(item.title, 'apples')
+        self.assertEqual(item.checked, False)
+
+    def test_add_item_checked(self):
+        from .models import ListItem
+        from .views import add_item
+        request = testing.DummyRequest(post=dict(title='apples ', checked='true'))
+        info = add_item(request)
+        self.assertEqual(info['success'], 'added "apples"')
+        item = DBSession.query(ListItem).filter_by(id=info['id']).one()
+        self.assertEqual(item.title, 'apples')
+        self.assertEqual(item.checked, True)
+
+    def test_add_item_unchecked(self):
+        from .models import ListItem
+        from .views import add_item
+        request = testing.DummyRequest(post=dict(title='apples ', checked='false'))
+        info = add_item(request)
+        self.assertEqual(info['success'], 'added "apples"')
+        item = DBSession.query(ListItem).filter_by(id=info['id']).one()
+        self.assertEqual(item.title, 'apples')
+        self.assertEqual(item.checked, False)
 
     def test_add_item_no_title(self):
         from .views import add_item

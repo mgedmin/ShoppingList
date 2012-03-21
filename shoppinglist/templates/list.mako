@@ -52,52 +52,125 @@
   </style>
   <script src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
   <script src="http://code.jquery.com/mobile/1.1.0-rc.1/jquery.mobile-1.1.0-rc.1.min.js"></script>
+## XXX I do not trust json.dumps to escape everything properly for HTML embedding
+<%! import json %>
   <script type="text/javascript">
     $(function(){
+        // DOM manipulations and data "model"
+        var all_items = function() {
+            return $("#list > li");
+        }
+        var add_item = function(title, checked, id) {
+            var new_li = $("<li>");
+            if (checked) new_li.addClass('checked')
+            new_li.append($('<a class="item">').text(title));
+            new_li.append($('<a class="delete">'));
+            new_li.append($('<input type="hidden">').val(id));
+            $("#list").append(new_li).listview('refresh');
+            return new_li;
+        };
+        var item_of = function(dom_node) {
+            return $(dom_node).closest("li");
+        };
+        var set_item_id = function(li, id) {
+            return li.find('input').val(id);
+        };
+        var get_item_id = function(li) {
+            return li.find('input').val();
+        };
+        var is_checked = function(li) {
+            return li.hasClass("checked");
+        };
+        var toggle_checked = function(li) {
+            li.toggleClass("checked");
+        };
+        var item_title = function(li) {
+            return li.find("a.item").text();
+        };
+        var quoted_item_title = function(li) {
+            return '"' + item_title(li) + '"';
+        };
+
+        // AJAX communications
+        var api_root = ${request.application_url|json.dumps,n};
+        var api_call = function(method, path, settings) {
+            if (path.search(/{id}/) != -1) {
+                var item_id = get_item_id(settings.li);
+                if (!item_id) {
+                    console.log('abort! abort!', item_id, settings.li);
+                }
+                // XXX item_id may not be set if we've just added an item
+                // and hadn't heard from the AJAX callback yet
+                path = path.replace('{id}', item_id);
+            }
+            // XXX PUT and DELETE not supported by all browsers, say the docs
+            ajax_settings = {type: method};
+            if ((settings || {}).data) ajax_settings.data = settings.data;
+            if ((settings || {}).success) ajax_settings.success = settings.success;
+            // XXX: handle failures!
+            $.ajax(api_root + path, ajax_settings);
+        }
+
+        // User interface
         var undoStack = [];
         $("#list > li a.item").live("tap", function (e) {
             e.preventDefault();
-            var li = $(this).closest("li");
-            li.toggleClass("checked");
-            if (li.hasClass("checked")) {
-                var what = "check " + '"' + $(this).text() + '"';
-            } else {
-                var what = "uncheck " + '"' + $(this).text() + '"';
-            }
-            undoStack.push([what, function() { li.toggleClass("checked"); }]);
+            var li = item_of(this);
+            toggle_checked(li);
+            api_call(is_checked(li) ? 'POST' : 'DELETE',
+                     '/api/items/{id}/checked',
+                     {li: li});
+            var what = (is_checked(li) ? "check " : "uncheck") + quoted_item_title(li)
+            undoStack.push([what, function() { 
+                toggle_checked(li);
+                api_call(is_checked(li) ? 'POST' : 'DELETE',
+                         '/api/items/{id}/checked',
+                         {li: li});
+            }]);
         });
         $("#list > li a.delete").live("tap", function (e) {
             e.preventDefault();
-            var what = "delete " + '"' + $(this).prev().text() + '"';
-            var li = $(this).closest("li");
+            var li = item_of(this);
             var previous = li.prev();
             li.detach();
-            if (previous.length > 0) {
-                undoStack.push([what, function() { li.insertAfter(previous); }]);
-            } else {
-                undoStack.push([what, function() { li.prependTo("#list"); }]);
-            }
+            api_call('DELETE', '/api/items/{id}', {li: li});
+            var what = "delete " + quoted_item_title(li);
+            undoStack.push([what, function() { 
+                set_item_id(li, null);
+                if (previous.length > 0) {
+                    li.insertAfter(previous);
+                } else {
+                    li.prependTo("#list");
+                }
+                api_call('POST', '/api/items', {
+                    data: {title: item_title(li), checked: is_checked(li)},
+                    success: function(data) {
+                        set_item_id(li, data.id);
+                    }
+                });
+            }]);
         });
-        var add_item = function(item, checked) {
-            var new_li = $("<li>");
-            if (checked) new_li.addClass('checked')
-            new_li.append($('<a class="item">').text(item));
-            new_li.append($('<a class="delete">'));
-            $("#list").append(new_li).listview('refresh');
-            /* scrollIntoView() tries to make new_li the top-most item,
-               and succeeds too well sometimes, when there are very few items
-               :( */
-            new_li.get(0).scrollIntoView();
-            return new_li;
-        };
         $("#add-item").click(function (e) {
             e.preventDefault();
             var new_item = $.trim($("#new-item").val());
             $("#new-item").val("");
             if (!new_item) return;
             var new_li = add_item(new_item);
-            var what = "add " + '"' + new_item + '"';
-            undoStack.push([what, function() { new_li.remove(); }]);
+            /* scrollIntoView() tries to make new_li the top-most item,
+               and succeeds too well sometimes, when there are very few items
+               :( */
+            new_li.get(0).scrollIntoView();
+            api_call('POST', '/api/items', {
+                data: {title: new_item},
+                success: function(data) {
+                    set_item_id(new_li, data.id);
+                }
+            });
+            var what = "add " + quoted_item_title(new_li);
+            undoStack.push([what, function() {
+                new_li.remove();
+                api_call('DELETE', '/api/items/{id}', {li: new_li});
+            }]);
         });
         $("#undo").click(function (e) {
             e.preventDefault();
@@ -109,11 +182,24 @@
         });
         $("#clear").click(function (e) {
             e.preventDefault();
-            var items = $("#list > li");
+            var items = all_items();
             if (items.length == 0) return;
             $("#list").empty();
             var what = "clear list";
-            undoStack.push([what, function() { $("#list").append(items); }]);
+            api_call('DELETE', '/api/items');
+            undoStack.push([what, function() {
+                items.each(function(idx, node) {
+                    var li = $(node)
+                    set_item_id(li, null);
+                    api_call('POST', '/api/items', {
+                        data: {title: item_title(li), checked: is_checked(li)},
+                        success: function(data) {
+                            set_item_id(li, data.id);
+                        }
+                    });
+                });
+                $("#list").append(items);
+            }]);
             history.back();
         });
         $(document).delegate("#menu", "pagebeforeshow", function() {
@@ -129,9 +215,8 @@
                 $("#clear").addClass("disabled");
             }
         });
-<%! import json %>
 % for item in items:
-        add_item(${item.title|json.dumps,n}, ${'true' if item.checked else 'false'});
+        add_item(${item.title|json.dumps,n}, ${'true' if item.checked else 'false'}, ${item.id});
 % endfor
     });
   </script>
