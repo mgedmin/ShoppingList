@@ -54,3 +54,7 @@ bin/nosetests: bin/pip
 
 bin/python bin/pip:
 	virtualenv --no-site-packages .
+
+.PHONY: recreate-virtualenv
+recreate-virtualenv:
+	make -B bin/python
