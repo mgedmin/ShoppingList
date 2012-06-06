@@ -21,3 +21,7 @@ tags
 
 # Database
 ShoppingList.db
+
+# Runtime files
+pyramid.log
+pyramid.pid
