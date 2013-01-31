@@ -50,7 +50,7 @@ bin/pcreate bin/pserve: bin/pip
 	bin/pip install pyramid
 
 bin/nosetests: bin/pip
-	bin/pip install nose
+	bin/pip install -I nose
 
 bin/python bin/pip:
 	virtualenv --no-site-packages .
