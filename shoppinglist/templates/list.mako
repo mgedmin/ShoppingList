@@ -202,6 +202,13 @@
                 history.back();
             }
         });
+        $("#sort").click(function(e) {
+            e.preventDefault();
+            all_items().sort(function(a, b){
+                return is_checked($(a)) - is_checked($(b));
+            }).appendTo("#list");
+            history.back();
+        });
         $("#clear").click(function (e) {
             e.preventDefault();
             var items = all_items();
@@ -266,6 +273,7 @@
     <div data-role="content">
       <ul data-role="listview" data-inset="true">
         <li data-icon="false"><a href="#" id="undo">Undo</a></li>
+        <li data-icon="false"><a href="#" id="sort">Sort list</a></li>
         <li data-icon="false"><a href="#" id="clear">Clear list</a></li>
       </ul>
     </div>
