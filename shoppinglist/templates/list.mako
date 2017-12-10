@@ -4,7 +4,7 @@
   <title>Shopping List</title>
   <!-- aka "my very first mobile application" -->
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"> 
-  <link rel="stylesheet" href="http://code.jquery.com/mobile/1.1.0-rc.1/jquery.mobile-1.1.0-rc.1.min.css" />
+  <link rel="stylesheet" href="https://code.jquery.com/mobile/1.1.0-rc.1/jquery.mobile-1.1.0-rc.1.min.css" />
   <style>
     /* Without this rule I see a greyish-red area, then a grey area, then a
        white area at the bottom of the page on my Nokia N9. */
@@ -32,12 +32,12 @@
         lists fill to the edges of the screen. If you add other widgets above
         or below a list, the negative margin may make these elements overlap so
         you'll need to add additional spacing in your custom CSS."
-          -- http://jquerymobile.com/demos/1.0/docs/lists/docs-lists.html */
+          -- https://jquerymobile.com/demos/1.0/docs/lists/docs-lists.html */
     .add-item-row {
       margin-top: 15px !important;
       padding-top: 2ex;
     }
-    /* Thank you http://stackoverflow.com/questions/8606298/jquery-mobile-display-an-html-form-inline/8608380#8608380
+    /* Thank you https://stackoverflow.com/questions/8606298/jquery-mobile-display-an-html-form-inline/8608380#8608380
        even though this isn't exactly what I want.  HTML/CSS is hard. */
     .add-item-row .ui-input-text {
       display: inline-block;
@@ -50,8 +50,8 @@
       margin-left: 1ex;
     }
   </style>
-  <script src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
-  <script src="http://code.jquery.com/mobile/1.1.0-rc.1/jquery.mobile-1.1.0-rc.1.min.js"></script>
+  <script src="https://code.jquery.com/jquery-1.7.1.min.js"></script>
+  <script src="https://code.jquery.com/mobile/1.1.0-rc.1/jquery.mobile-1.1.0-rc.1.min.js"></script>
 ## XXX I do not trust json.dumps to escape everything properly for HTML embedding
 ## For instance, add a shopping list item '</script>', reload page, watch it break horribly
 <%! import json %>
