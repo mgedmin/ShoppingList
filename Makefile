@@ -19,12 +19,13 @@ var:
 	install -m 755 -o www-data -g www-data -d var || rmdir var
 
 update-all-packages: bin/pip
-	bin/pip install -U nose pyramid pyramid_debugtoolbar waitress
+	bin/pip install -U pip setuptools wheel
+	bin/pip install -U --upgrade-strategy=eager nose coverage -e .
 	make
 	make update-requirements
 
 update-requirements: bin/pip
-	PYTHONPATH= bin/pip freeze | grep -v '^-e .*$(pypackage)-dev$$' > requirements.txt
+	PYTHONPATH= bin/pip freeze | grep -v '^-e .*$(pypackage)$$' > requirements.txt
 
 update:
 	git pull
