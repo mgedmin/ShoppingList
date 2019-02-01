@@ -42,8 +42,8 @@ dist: bin/python
 	bin/python setup.py sdist
 
 distclean: clean
-	rm -rf bin/ dist/ include/ lib/ *.egg-info/ build/
-	rm -f local .coverage tags
+	rm -rf bin/ dist/ include/ lib/ *.egg-info/ build/ local/
+	rm -f .coverage tags
 
 ShoppingList.db: $(egg_link)
 	test -f $@ || bin/init_ShoppingList_db development.ini
