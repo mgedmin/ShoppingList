@@ -4,7 +4,7 @@ import transaction
 from pyramid import testing
 from pyramid.httpexceptions import HTTPNotFound
 
-from .models import DBSession
+from .models import DBSession, Base, ListItem
 
 
 class TestMyView(unittest.TestCase):
@@ -13,8 +13,6 @@ class TestMyView(unittest.TestCase):
         from sqlalchemy import create_engine
 
         engine = create_engine("sqlite://")
-        from .models import Base, ListItem
-
         DBSession.configure(bind=engine)
         Base.metadata.create_all(engine)
         with transaction.manager:
@@ -155,3 +153,20 @@ class TestMyView(unittest.TestCase):
         info = clear_list(request)
         self.assertEqual(info["success"], "deleted 2 items")
         self.assertEqual(DBSession.query(ListItem).count(), 0)
+
+
+class FunctionalTests(unittest.TestCase):
+
+    def setUp(self):
+        from webtest import TestApp
+        from . import main
+
+        app = main({}, **{
+            'sqlalchemy.url': 'sqlite:///:memory:'
+        })
+        Base.metadata.create_all(DBSession.bind)
+        self.testapp = TestApp(app)
+
+    def test_root(self):
+        res = self.testapp.get('/', status=200)
+        self.assertIn('<h1>Shopping List</h1>', res.body)

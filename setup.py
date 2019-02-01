@@ -28,6 +28,10 @@ requires = [
     "zope.sqlalchemy",
 ]
 
+tests_require = [
+    "WebTest",
+]
+
 setup(
     name="ShoppingList",
     version="0.2",
@@ -50,6 +54,7 @@ setup(
     zip_safe=False,
     test_suite="shoppinglist",
     install_requires=requires,
+    extras_require={"testing": tests_require},
     entry_points={
         "paste.app_factory": ["main = shoppinglist:main"],
         "console_scripts": [
