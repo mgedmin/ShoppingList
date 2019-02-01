@@ -7,7 +7,7 @@ from pyramid.httpexceptions import HTTPNotFound
 from .models import DBSession, Base, ListItem
 
 
-class TestMyView(unittest.TestCase):
+class TestViews(unittest.TestCase):
     def setUp(self):
         self.config = testing.setUp()
         from sqlalchemy import create_engine
@@ -153,6 +153,27 @@ class TestMyView(unittest.TestCase):
         info = clear_list(request)
         self.assertEqual(info["success"], "deleted 2 items")
         self.assertEqual(DBSession.query(ListItem).count(), 0)
+
+
+class TestUninitializedDB(unittest.TestCase):
+
+    def setUp(self):
+        self.config = testing.setUp()
+        from sqlalchemy import create_engine
+
+        engine = create_engine("sqlite://")
+        DBSession.configure(bind=engine)
+
+    def tearDown(self):
+        DBSession.remove()
+        testing.tearDown()
+
+    def test_main_view(self):
+        from .views import main_view
+
+        request = testing.DummyRequest()
+        res = main_view(request)
+        self.assertEqual(res.status_int, 500)
 
 
 class FunctionalTests(unittest.TestCase):
