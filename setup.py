@@ -11,46 +11,44 @@ def read(filename):
         return fp.read()
 
 
-README = read('README.rst')
-CHANGES = read('CHANGES.rst')
+README = read("README.rst")
+CHANGES = read("CHANGES.rst")
 
 
 requires = [
-    'pyramid',
-    'SQLAlchemy',
-    'transaction',
-    'pyramid_tm',
-    'pyramid_debugtoolbar',
-    'zope.sqlalchemy',
-    'waitress',
+    "pyramid",
+    "SQLAlchemy",
+    "transaction",
+    "pyramid_tm",
+    "pyramid_debugtoolbar",
+    "zope.sqlalchemy",
+    "waitress",
 ]
 
 setup(
-    name='ShoppingList',
-    version='0.2',
-    description='ShoppingList',
-    long_description=README + '\n\n' + CHANGES,
+    name="ShoppingList",
+    version="0.2",
+    description="ShoppingList",
+    long_description=README + "\n\n" + CHANGES,
     classifiers=[
         "Programming Language :: Python",
         "Framework :: Pylons",
         "Topic :: Internet :: WWW/HTTP",
         "Topic :: Internet :: WWW/HTTP :: WSGI :: Application",
     ],
-    author='Marius Gedminas',
-    author_email='marius@gedmin.as',
-    url='https://github.com/mgedmin/ShoppingList',
-    keywords='web wsgi bfg pylons pyramid',
+    author="Marius Gedminas",
+    author_email="marius@gedmin.as",
+    url="https://github.com/mgedmin/ShoppingList",
+    keywords="web wsgi bfg pylons pyramid",
     packages=find_packages(),
     include_package_data=True,
     zip_safe=False,
-    test_suite='shoppinglist',
+    test_suite="shoppinglist",
     install_requires=requires,
     entry_points={
-        'paste.app_factory': [
-            'main = shoppinglist:main',
-        ],
-        'console_scripts': [
-            'init_ShoppingList_db = shoppinglist.scripts.initializedb:main',
+        "paste.app_factory": ["main = shoppinglist:main"],
+        "console_scripts": [
+            "init_ShoppingList_db = shoppinglist.scripts.initializedb:main"
         ],
     },
 )

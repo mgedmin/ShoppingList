@@ -1,22 +1,22 @@
 from pyramid.response import Response
 from pyramid.view import view_config
 from pyramid.httpexceptions import HTTPNotFound
-
 from sqlalchemy.exc import DBAPIError
 from sqlalchemy.orm.exc import NoResultFound
 
-from .models import (
-    DBSession,
-    ListItem,
-    )
+from .models import DBSession, ListItem
 
-@view_config(route_name='home', renderer='shoppinglist:templates/list.mako')
+
+@view_config(route_name="home", renderer="shoppinglist:templates/list.mako")
 def main_view(request):
     try:
         items = DBSession.query(ListItem).all()
     except DBAPIError:
-        return Response(conn_err_msg, content_type='text/plain', status_int=500)
-    return {'items': items}
+        return Response(
+            conn_err_msg, content_type="text/plain", status_int=500
+        )
+    return {"items": items}
+
 
 conn_err_msg = """\
 Pyramid is having a problem using your SQL database.  The problem
@@ -35,59 +35,65 @@ try it again.
 """
 
 
-@view_config(route_name='list_items', renderer='json')
+@view_config(route_name="list_items", renderer="json")
 def list_items(request):
     items = DBSession.query(ListItem).all()
-    return {'success': '',
-            'items': [{'id': item.id,
-                       'title': item.title,
-                       'checked': item.checked}
-                      for item in items]}
+    return {
+        "success": "",
+        "items": [
+            {"id": item.id, "title": item.title, "checked": item.checked}
+            for item in items
+        ],
+    }
 
-@view_config(route_name='add_item', renderer='json')
+
+@view_config(route_name="add_item", renderer="json")
 def add_item(request):
-    title = request.POST.get('title', '').strip()
+    title = request.POST.get("title", "").strip()
     if not title:
-        return {'error': "'title' parameter blank or missing"}
+        return {"error": "'title' parameter blank or missing"}
     item = ListItem(title)
-    if request.POST.get('checked', '').lower() == 'true':
+    if request.POST.get("checked", "").lower() == "true":
         item.checked = True
     DBSession.add(item)
-    DBSession.flush() # force ID allocation
-    return {'success': 'added "%s"' % title, 'id': item.id}
+    DBSession.flush()  # force ID allocation
+    return {"success": 'added "%s"' % title, "id": item.id}
 
-@view_config(route_name='remove_item', renderer='json')
+
+@view_config(route_name="remove_item", renderer="json")
 def remove_item(request):
-    item_id = request.matchdict['id']
+    item_id = request.matchdict["id"]
     try:
         item = DBSession.query(ListItem).filter_by(id=item_id).one()
     except NoResultFound:
         return HTTPNotFound()
     DBSession.delete(item)
-    return {'success': 'removed "%s"' % item.title}
+    return {"success": 'removed "%s"' % item.title}
 
-@view_config(route_name='check_item', renderer='json')
+
+@view_config(route_name="check_item", renderer="json")
 def check_item(request):
-    item_id = request.matchdict['id']
+    item_id = request.matchdict["id"]
     try:
         item = DBSession.query(ListItem).filter_by(id=item_id).one()
     except NoResultFound:
         return HTTPNotFound()
     item.checked = True
-    return {'success': 'checked "%s"' % item.title}
+    return {"success": 'checked "%s"' % item.title}
 
-@view_config(route_name='uncheck_item', renderer='json')
+
+@view_config(route_name="uncheck_item", renderer="json")
 def uncheck_item(request):
-    item_id = request.matchdict['id']
+    item_id = request.matchdict["id"]
     try:
         item = DBSession.query(ListItem).filter_by(id=item_id).one()
     except NoResultFound:
         return HTTPNotFound()
     item.checked = False
-    return {'success': 'unchecked "%s"' % item.title}
+    return {"success": 'unchecked "%s"' % item.title}
 
-@view_config(route_name='clear_list', renderer='json')
+
+@view_config(route_name="clear_list", renderer="json")
 def clear_list(request):
     n = DBSession.query(ListItem).delete()
-    return {'success': 'deleted %d items' % n}
-
+    return {"success": "deleted %d items" % n}
