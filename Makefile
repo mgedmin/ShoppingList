@@ -49,7 +49,7 @@ ShoppingList.db: $(egg_link)
 	test -f $@ || bin/init_ShoppingList_db development.ini
 
 $(egg_link): bin/python setup.py
-	bin/pip install -e .
+	bin/pip install -e . watchdog
 
 bin/pserve: bin/pip
 	bin/pip install pyramid watchdog
