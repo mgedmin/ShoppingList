@@ -188,6 +188,9 @@ class FunctionalTests(unittest.TestCase):
         Base.metadata.create_all(DBSession.bind)
         self.testapp = TestApp(app)
 
+    def tearDown(self):
+        DBSession.remove()
+
     def test_root(self):
         res = self.testapp.get('/', status=200)
         self.assertIn('<h1>Shopping List</h1>', res.body)
