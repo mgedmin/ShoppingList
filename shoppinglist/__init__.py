@@ -13,6 +13,7 @@ def main(global_config, **settings):
         {"mako.imports": "from shoppinglist.filters import json"}
     )
     config.include("pyramid_mako")
+    config.include("pyramid_tm")
     config.add_static_view("static", "static", cache_max_age=3600)
     config.add_route("home", "/")
     # Let's go nuts with REST, why don't we?
