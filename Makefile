@@ -2,13 +2,13 @@ PYTHON = python
 pypackage = ShoppingList
 egg_link = lib/python*/site-packages/$(pypackage).egg-link
 
-all: bin/pcreate bin/pserve $(egg_link) bin/nosetests bin/flake8 ShoppingList.db
+all: bin/pcreate bin/pserve $(egg_link) bin/pytest bin/flake8 ShoppingList.db
 
 run: bin/pserve $(egg_link) ShoppingList.db
 	bin/pserve development.ini --reload
 
-test: bin/nosetests
-	bin/nosetests
+test: bin/pytest
+	bin/pytest --cov
 
 lint: bin/flake8
 	bin/flake8 *.py $(pypackage)
@@ -23,7 +23,7 @@ var:
 
 update-all-packages: bin/pip
 	bin/pip install -U pip setuptools wheel
-	bin/pip install -U --upgrade-strategy=eager nose coverage flake8 watchdog -e .
+	bin/pip install -U --upgrade-strategy=eager pytest pytest-cov flake8 watchdog -e .
 	make
 	make update-requirements
 
@@ -54,8 +54,8 @@ $(egg_link): bin/python setup.py
 bin/pcreate bin/pserve: bin/pip
 	bin/pip install pyramid watchdog
 
-bin/nosetests: bin/pip
-	bin/pip install nose coverage
+bin/pytest: bin/pip
+	bin/pip install pytest pytest-cov
 
 bin/flake8: bin/pip
 	bin/pip install flake8

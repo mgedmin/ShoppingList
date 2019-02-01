@@ -1,0 +1,3 @@
+[run]
+source = shoppinglist
+omit = shoppinglist/test*
