@@ -7,7 +7,7 @@ all: bin/pcreate bin/pserve $(egg_link) bin/pytest bin/flake8 ShoppingList.db
 run: bin/pserve $(egg_link) ShoppingList.db
 	bin/pserve development.ini --reload
 
-test: bin/pytest
+test: bin/pytest $(egg_link)
 	bin/pytest --cov
 
 lint: bin/flake8
