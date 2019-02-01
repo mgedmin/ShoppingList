@@ -43,7 +43,7 @@ distclean: clean
 	rm -f local .coverage tags
 
 ShoppingList.db: $(egg_link)
-	test -f $@ || bin/initialize_ShoppingList_db development.ini
+	test -f $@ || bin/init_ShoppingList_db development.ini
 
 $(egg_link): bin/python setup.py
 	bin/pip install -e .
