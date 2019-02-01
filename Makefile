@@ -2,7 +2,7 @@ PYTHON = python
 pypackage = ShoppingList
 egg_link = lib/python*/site-packages/$(pypackage).egg-link
 
-all: bin/pcreate bin/pserve $(egg_link) bin/pytest bin/flake8 ShoppingList.db
+all: bin/pserve $(egg_link) bin/pytest bin/flake8 ShoppingList.db
 
 run: bin/pserve $(egg_link) ShoppingList.db
 	bin/pserve development.ini --reload
@@ -51,7 +51,7 @@ ShoppingList.db: $(egg_link)
 $(egg_link): bin/python setup.py
 	bin/pip install -e .
 
-bin/pcreate bin/pserve: bin/pip
+bin/pserve: bin/pip
 	bin/pip install pyramid watchdog
 
 bin/pytest: bin/pip
