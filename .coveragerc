@@ -1,3 +1,5 @@
 [run]
 source = shoppinglist
-omit = shoppinglist/test*
+omit =
+  shoppinglist/test*
+  shoppinglist/scripts/initializedb.py
