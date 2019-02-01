@@ -52,9 +52,6 @@
   </style>
   <script src="https://code.jquery.com/jquery-1.7.1.min.js"></script>
   <script src="https://code.jquery.com/mobile/1.1.0-rc.1/jquery.mobile-1.1.0-rc.1.min.js"></script>
-## XXX I do not trust json.dumps to escape everything properly for HTML embedding
-## For instance, add a shopping list item '</script>', reload page, watch it break horribly
-<%! import json %>
   <script type="text/javascript">
     $(function(){
         // DOM manipulations and data "model"
@@ -111,7 +108,7 @@
         };
 
         // AJAX communications
-        var api_root = ${request.application_url|json.dumps,n};
+        var api_root = ${request.application_url|json,n};
         var api_call = function(method, path, settings) {
             if (path.search(/{id}/) != -1) {
                 var item_id = get_item_id(settings.li);
@@ -245,7 +242,7 @@
             }
         });
 % for item in items:
-        add_item(${item.title|json.dumps,n}, ${'true' if item.checked else 'false'}, ${item.id});
+        add_item(${item.title|json,n}, ${'true' if item.checked else 'false'}, ${item.id});
 % endfor
     });
   </script>

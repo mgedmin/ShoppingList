@@ -16,6 +16,7 @@ CHANGES = read("CHANGES.rst")
 
 
 requires = [
+    "markupsafe",
     "pyramid",
     "SQLAlchemy",
     "transaction",
