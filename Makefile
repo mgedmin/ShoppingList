@@ -1,3 +1,4 @@
+PYTHON = python
 pypackage = ShoppingList
 egg_link = lib/python*/site-packages/$(pypackage).egg-link
 
@@ -53,7 +54,7 @@ bin/nosetests: bin/pip
 	bin/pip install -I nose
 
 bin/python bin/pip:
-	virtualenv --no-site-packages .
+	virtualenv -p $(PYTHON) .
 
 .PHONY: recreate-virtualenv
 recreate-virtualenv:
