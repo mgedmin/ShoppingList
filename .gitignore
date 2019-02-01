@@ -25,3 +25,4 @@ ShoppingList.db
 # Runtime files
 pyramid.log
 pyramid.pid
+.tox/

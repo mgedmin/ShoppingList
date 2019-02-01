@@ -96,7 +96,7 @@ class TestMyView(unittest.TestCase):
 
         item = DBSession.query(ListItem).filter_by(title="juice").one()
         request = testing.DummyRequest()
-        request.matchdict["id"] = unicode(item.id)
+        request.matchdict["id"] = str(item.id)
         info = remove_item(request)
         self.assertEqual(info["success"], 'removed "juice"')
         self.assertEqual(DBSession.query(ListItem).count(), 1)
@@ -115,7 +115,7 @@ class TestMyView(unittest.TestCase):
 
         item = DBSession.query(ListItem).filter_by(title="bread").one()
         request = testing.DummyRequest()
-        request.matchdict["id"] = unicode(item.id)
+        request.matchdict["id"] = str(item.id)
         info = check_item(request)
         self.assertEqual(info["success"], 'checked "bread"')
         self.assertEqual(item.checked, True)
@@ -134,7 +134,7 @@ class TestMyView(unittest.TestCase):
 
         item = DBSession.query(ListItem).filter_by(title="juice").one()
         request = testing.DummyRequest()
-        request.matchdict["id"] = unicode(item.id)
+        request.matchdict["id"] = str(item.id)
         info = uncheck_item(request)
         self.assertEqual(info["success"], 'unchecked "juice"')
         self.assertEqual(item.checked, False)
