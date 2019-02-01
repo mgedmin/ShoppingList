@@ -23,7 +23,7 @@ var:
 
 update-all-packages: bin/pip
 	bin/pip install -U pip setuptools wheel
-	bin/pip install -U --upgrade-strategy=eager nose coverage flake8 -e .
+	bin/pip install -U --upgrade-strategy=eager nose coverage flake8 watchdog -e .
 	make
 	make update-requirements
 
@@ -52,10 +52,10 @@ $(egg_link): bin/python setup.py
 	bin/pip install -e .
 
 bin/pcreate bin/pserve: bin/pip
-	bin/pip install pyramid
+	bin/pip install pyramid watchdog
 
 bin/nosetests: bin/pip
-	bin/pip install nose
+	bin/pip install nose coverage
 
 bin/flake8: bin/pip
 	bin/pip install flake8
