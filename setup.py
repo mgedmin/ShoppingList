@@ -16,15 +16,16 @@ CHANGES = read("CHANGES.rst")
 
 
 requires = [
-    "markupsafe",
-    "pyramid",
     "SQLAlchemy",
-    "transaction",
-    "pyramid_tm",
-    "pyramid_mako",
+    "markupsafe",
+    "plaster_pastedeploy",
+    "pyramid",
     "pyramid_debugtoolbar",
-    "zope.sqlalchemy",
+    "pyramid_mako",
+    "pyramid_tm",
+    "transaction",
     "waitress",
+    "zope.sqlalchemy",
 ]
 
 setup(
