@@ -12,7 +12,7 @@
       background: #eee;
     }
     /* Bigger font, indicate clickability on desktop */
-    ul#list > li a.item {
+    ul#list > li .ui-btn {
       font-size: 150%;
     }
     ul#list > li {
