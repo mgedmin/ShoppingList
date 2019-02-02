@@ -41,6 +41,9 @@ update-assets:
 	mkdir -p shoppinglist/static/images
 	wget -O shoppinglist/static/images/ajax-loader.gif https://code.jquery.com/mobile/$(JQUERY_MOBILE_VERSION)/images/ajax-loader.gif
 	wget -O shoppinglist/static/images/icons-18-white.png https://code.jquery.com/mobile/$(JQUERY_MOBILE_VERSION)/images/icons-18-white.png
+	wget -O shoppinglist/static/images/icons-18-black.png https://code.jquery.com/mobile/$(JQUERY_MOBILE_VERSION)/images/icons-18-black.png
+	wget -O shoppinglist/static/images/icons-36-white.png https://code.jquery.com/mobile/$(JQUERY_MOBILE_VERSION)/images/icons-36-white.png
+	wget -O shoppinglist/static/images/icons-36-black.png https://code.jquery.com/mobile/$(JQUERY_MOBILE_VERSION)/images/icons-36-black.png
 
 update:
 	git pull
