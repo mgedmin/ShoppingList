@@ -254,7 +254,7 @@
   <div data-role="page" id="main">
     <div data-role="header" data-theme="b">
       <h1>Shopping List</h1>
-      <a href="#menu" class="ui-btn-right" data-icon="grid" data-rel="dialog" data-transition="none">Menu</a>
+      <a href="#menu" class="ui-btn-right" data-icon="grid" data-transition="none">Menu</a>
     </div>
     <div data-role="content">
       <ul id="list" data-role="listview" data-theme="d" data-split-theme="d" data-split-icon="delete">
@@ -266,7 +266,7 @@
       </form>
     </div>
   </div>
-  <div data-role="page" id="menu">
+  <div data-role="page" id="menu" data-dialog="true">
     <div data-role="header" data-theme="b">
       <h1>Shopping List</h1>
     </div>
