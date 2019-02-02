@@ -2,6 +2,7 @@ from pyramid.config import Configurator
 from sqlalchemy import engine_from_config
 
 from .models import DBSession
+from .cache import ChecksumCacheBuster
 
 
 def main(global_config, **settings):
@@ -15,6 +16,7 @@ def main(global_config, **settings):
     config.include("pyramid_mako")
     config.include("pyramid_tm")
     config.add_static_view("static", "static", cache_max_age=3600)
+    config.add_cache_buster("static", ChecksumCacheBuster("static/SHA256SUMS"))
     config.add_route("home", "/")
     # Let's go nuts with REST, why don't we?
     config.add_route("list_items", "/api/items", request_method="GET")
