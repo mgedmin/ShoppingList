@@ -133,7 +133,7 @@
 
         // User interface
         var undoStack = [];
-        $("#list > li a.item").live("tap", function (e) {
+        $("#list").on("tap", "a.item", function (e) {
             e.preventDefault();
             var li = item_of(this);
             toggle_checked(li);
@@ -148,7 +148,7 @@
                          {li: li});
             }]);
         });
-        $("#list > li a.delete").live("tap", function (e) {
+        $("#list").on("tap", "a.delete", function (e) {
             e.preventDefault();
             var li = item_of(this);
             var previous = li.prev();
