@@ -31,8 +31,8 @@ update-requirements: bin/pip
 	PYTHONPATH= bin/pip freeze | grep -v '^-e .*$(pypackage)$$' > requirements.txt
 
 
-JQUERY_VERSION = 1.8.3
-JQUERY_MOBILE_VERSION = 1.2.1
+JQUERY_VERSION = 1.9.1
+JQUERY_MOBILE_VERSION = 1.3.2
 
 update-assets:
 	wget -O shoppinglist/static/jquery.min.js https://code.jquery.com/jquery-$(JQUERY_VERSION).min.js
