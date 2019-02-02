@@ -40,6 +40,7 @@ update-assets:
 	wget -O shoppinglist/static/jquery.mobile.min.css https://code.jquery.com/mobile/$(JQUERY_MOBILE_VERSION)/jquery.mobile-$(JQUERY_MOBILE_VERSION).min.css
 	mkdir -p shoppinglist/static/images
 	wget -O shoppinglist/static/images/ajax-loader.gif https://code.jquery.com/mobile/$(JQUERY_MOBILE_VERSION)/images/ajax-loader.gif
+	cd shoppinglist/static && sha256sum *.css *.js > SHA256SUMS
 
 update:
 	git pull
