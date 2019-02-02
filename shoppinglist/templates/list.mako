@@ -306,7 +306,7 @@
       <ul id="list" data-role="listview" data-theme="d" data-split-theme="d" data-split-icon="delete">
       </ul>
       <form class="add-item-row">
-        <input id="new-item" type="text">
+        <input id="new-item" type="text" autocomplete="off">
         <div id="add-item" class="side-btn ui-btn">
           <input type="submit" data-type="button" data-icon="plus" data-theme="b" value="Add" data-iconpos="notext">
         </div>
