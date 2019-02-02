@@ -252,7 +252,7 @@
 </head>
 <body>
   <div data-role="page" id="main">
-    <div data-role="header">
+    <div data-role="header" data-theme="b">
       <h1>Shopping List</h1>
       <a href="#menu" class="ui-btn-right" data-icon="grid" data-rel="dialog" data-transition="none">Menu</a>
     </div>
@@ -267,7 +267,7 @@
     </div>
   </div>
   <div data-role="page" id="menu">
-    <div data-role="header">
+    <div data-role="header" data-theme="b">
       <h1>Shopping List</h1>
     </div>
     <div data-role="content">
