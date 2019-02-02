@@ -12,8 +12,10 @@
       background: #eee;
     }
     /* Bigger font, indicate clickability on desktop */
-    ul#list > li {
+    ul#list > li a.item {
       font-size: 150%;
+    }
+    ul#list > li {
       cursor: pointer;
     }
     /* Checked items; assumes the background is light */
