@@ -22,6 +22,7 @@
     }
     ul#list > li.checked a:first-child {
       color: #ccc;
+      filter: grayscale(100%);
     }
     /* Disabled menu items -- looks like jQM has no concept of 'menu' */
     li.ui-btn a.disabled {
