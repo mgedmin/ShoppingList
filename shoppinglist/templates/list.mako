@@ -142,7 +142,7 @@
             api_call(is_checked(li) ? 'POST' : 'DELETE',
                      '/api/items/{id}/checked',
                      {li: li});
-            var what = (is_checked(li) ? "check " : "uncheck") + quoted_item_title(li)
+            var what = (is_checked(li) ? "check " : "uncheck ") + quoted_item_title(li)
             undoStack.push([what, function() { 
                 toggle_checked(li);
                 api_call(is_checked(li) ? 'POST' : 'DELETE',
