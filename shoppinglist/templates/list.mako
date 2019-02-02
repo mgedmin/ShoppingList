@@ -22,7 +22,12 @@
       filter: grayscale(100%);
     }
     /* Disabled menu items -- looks like jQM has no concept of 'menu' */
-    li.ui-btn a.disabled {
+    #menu > ul {
+      min-width: 200px;
+    }
+    li > a.ui-btn.disabled,
+    li > a.ui-btn.disabled:active,
+    li > a.ui-btn.disabled:hover {
       color: #ccc;
     }
     /* "Style note on non-inset lists: all standard, non-inset lists have a
@@ -140,6 +145,9 @@
         var quoted_item_title = function(li) {
             return '"' + item_title(li) + '"';
         };
+        var close_menu = function() {
+            $("#menu").popup("close");
+        };
 
         // AJAX communications
         var api_root = ${request.application_url|json,n};
@@ -230,7 +238,7 @@
             if (undoStack.length > 0) {
                 var fn = undoStack.pop()[1];
                 fn.apply();
-                history.back();
+                close_menu();
             }
         });
         $("#sort").click(function(e) {
@@ -238,7 +246,7 @@
             all_items().sort(function(a, b){
                 return is_checked($(a)) - is_checked($(b));
             }).appendTo("#list");
-            history.back();
+            close_menu();
         });
         $("#clear").click(function (e) {
             e.preventDefault();
@@ -260,9 +268,9 @@
                 });
                 $("#list").append(items);
             }]);
-            history.back();
+            close_menu();
         });
-        $(document).delegate("#menu", "pagebeforeshow", function() {
+        $("#menu").on("popupbeforeposition", function() {
             if (undoStack.length > 0) {
                 var what = undoStack[undoStack.length - 1][0];
                 $("#undo").text("Undo " + what).removeClass("disabled");
@@ -285,7 +293,14 @@
   <div data-role="page" id="main">
     <div data-role="header" data-theme="b">
       <h1>Shopping List</h1>
-      <a href="#menu" class="ui-btn-right" data-icon="grid" data-transition="none">Menu</a>
+      <a href="#menu" class="ui-btn-right" data-icon="grid" data-rel="popup" data-position-to="origin">Menu</a>
+    </div>
+    <div data-role="popup" id="menu" data-theme="a" data-tolerance="44,4,30,15" data-history="false">
+      <ul data-role="listview" data-inset="true" data-theme="a">
+        <li data-icon="false"><a href="#" id="undo">Undo</a></li>
+        <li data-icon="false"><a href="#" id="sort">Sort list</a></li>
+        <li data-icon="false"><a href="#" id="clear">Clear list</a></li>
+      </ul>
     </div>
     <div class="ui-content" role="main" id="main">
       <ul id="list" data-role="listview" data-theme="d" data-split-theme="d" data-split-icon="delete">
@@ -296,18 +311,6 @@
           <input type="submit" data-type="button" data-icon="plus" data-theme="b" value="Add" data-iconpos="notext">
         </div>
       </form>
-    </div>
-  </div>
-  <div data-role="page" id="menu" data-dialog="true">
-    <div data-role="header" data-theme="b">
-      <h1>Shopping List</h1>
-    </div>
-    <div class="ui-content">
-      <ul data-role="listview" data-inset="true">
-        <li data-icon="false"><a href="#" id="undo">Undo</a></li>
-        <li data-icon="false"><a href="#" id="sort">Sort list</a></li>
-        <li data-icon="false"><a href="#" id="clear">Clear list</a></li>
-      </ul>
     </div>
   </div>
 </body>
