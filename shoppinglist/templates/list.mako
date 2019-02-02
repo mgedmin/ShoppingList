@@ -256,7 +256,7 @@
       <h1>Shopping List</h1>
       <a href="#menu" class="ui-btn-right" data-icon="grid" data-transition="none">Menu</a>
     </div>
-    <div data-role="content">
+    <div class="ui-content" role="main">
       <ul id="list" data-role="listview" data-theme="d" data-split-theme="d" data-split-icon="delete">
       </ul>
       <form class="add-item-row">
@@ -270,7 +270,7 @@
     <div data-role="header" data-theme="b">
       <h1>Shopping List</h1>
     </div>
-    <div data-role="content">
+    <div class="ui-content">
       <ul data-role="listview" data-inset="true">
         <li data-icon="false"><a href="#" id="undo">Undo</a></li>
         <li data-icon="false"><a href="#" id="sort">Sort list</a></li>
