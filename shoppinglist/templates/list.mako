@@ -6,14 +6,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"> 
   <link rel="stylesheet" href="${request.static_url('shoppinglist:static/jquery.mobile.min.css')}" />
   <style>
-    /* Without this rule I see a greyish-red area, then a grey area, then a
-       white area at the bottom of the page on my Nokia N9. */
-    body, div.ui-page {
-      background: #eee;
-    }
     /* Bigger font, indicate clickability on desktop */
     ul#list > li .ui-btn {
-      font-size: 150%;
+      font-size: 24px;
     }
     ul#list > li {
       cursor: pointer;
@@ -36,21 +31,57 @@
         or below a list, the negative margin may make these elements overlap so
         you'll need to add additional spacing in your custom CSS."
           -- https://jquerymobile.com/demos/1.0/docs/lists/docs-lists.html */
+    #main {
+      padding-top: 0;
+    }
+    #list {
+      margin-top: 0;
+    }
     .add-item-row {
-      margin-top: 15px !important;
-      padding-top: 2ex;
+      margin: 0 -1em;
+      position: relative;
     }
-    /* Thank you https://stackoverflow.com/questions/8606298/jquery-mobile-display-an-html-form-inline/8608380#8608380
-       even though this isn't exactly what I want.  HTML/CSS is hard. */
     .add-item-row .ui-input-text {
-      display: inline-block;
-      width: 85%;
-      vertical-align: middle;
+      margin-top: 16px;
+      margin-right: 60px;
+      font-size: 24px;
+      border: 0;
+      border-radius: 0;
     }
-    .add-item-row .ui-btn {
-      display: inline-block;
-      vertical-align: middle;
-      margin-left: 1ex;
+    .add-item-row .ui-input-text input {
+      padding: .7em 1em;
+      line-height: 1.3;
+      border-top: 1px solid #ddd;
+      border-bottom: 1px solid #ddd;
+      background: white;
+    }
+    .add-item-row .side-btn {
+      position: absolute;
+      width: 2.5em;
+      height: 100%;
+      top: 0px;
+      right: 0px;
+      padding: 0;
+      margin: 0;
+      font-size: 24px;
+      box-sizing: border-box;
+      border-right: 0;
+    }
+    .add-item-row .side-btn .ui-btn {
+      position: absolute;
+      top: 50%;
+      margin-top: -15px;
+      width: 28px;
+      left: 50%;
+      margin-left: -15px;
+      height: 28px;
+      background-color: #2ad;
+      border-color: #2ad;
+      color: #fff;
+      text-shadow: 0 1px 0 #08b;
+    }
+    .ui-listview>li.ui-last-child, .ui-listview>li.ui-last-child>a.ui-btn {
+      border-bottom: 0;
     }
   </style>
   <script src="${request.static_url('shoppinglist:static/jquery.min.js')}"></script>
@@ -256,13 +287,14 @@
       <h1>Shopping List</h1>
       <a href="#menu" class="ui-btn-right" data-icon="grid" data-transition="none">Menu</a>
     </div>
-    <div class="ui-content" role="main">
+    <div class="ui-content" role="main" id="main">
       <ul id="list" data-role="listview" data-theme="d" data-split-theme="d" data-split-icon="delete">
       </ul>
       <form class="add-item-row">
         <input id="new-item" type="text">
-        <input id="add-item" type="submit" data-type="button" data-icon="plus" data-theme="b" value="Add" data-iconpos="notext" data-inline="true">
-        <!-- data-iconpos="notext" is interesting, but removes too much padding -->
+        <div class="side-btn ui-btn">
+          <input id="add-item" type="submit" data-type="button" data-icon="plus" data-theme="b" value="Add" data-iconpos="notext">
+        </div>
       </form>
     </div>
   </div>
