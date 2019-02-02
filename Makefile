@@ -30,6 +30,14 @@ update-all-packages: bin/pip
 update-requirements: bin/pip
 	PYTHONPATH= bin/pip freeze | grep -v '^-e .*$(pypackage)$$' > requirements.txt
 
+update-assets:
+	wget -O shoppinglist/static/jquery.min.js https://code.jquery.com/jquery-1.7.1.min.js
+	wget -O shoppinglist/static/jquery.mobile.min.js https://code.jquery.com/mobile/1.1.0/jquery.mobile-1.1.0.min.js
+	wget -O shoppinglist/static/jquery.mobile.min.css https://code.jquery.com/mobile/1.1.0/jquery.mobile-1.1.0.min.css
+	mkdir -p shoppinglist/static/images
+	wget -O shoppinglist/static/images/ajax-loader.gif https://code.jquery.com/mobile/1.1.0/images/ajax-loader.gif
+	wget -O shoppinglist/static/images/icons-18-white.png https://code.jquery.com/mobile/1.1.0/images/icons-18-white.png
+
 update:
 	git pull
 	make
