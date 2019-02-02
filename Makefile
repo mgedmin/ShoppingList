@@ -31,8 +31,8 @@ update-requirements: bin/pip
 	PYTHONPATH= bin/pip freeze | grep -v '^-e .*$(pypackage)$$' > requirements.txt
 
 
-JQUERY_VERSION = 1.9.1
-JQUERY_MOBILE_VERSION = 1.3.2
+JQUERY_VERSION = 1.11.1
+JQUERY_MOBILE_VERSION = 1.4.5
 
 update-assets:
 	wget -O shoppinglist/static/jquery.min.js https://code.jquery.com/jquery-$(JQUERY_VERSION).min.js
@@ -40,10 +40,6 @@ update-assets:
 	wget -O shoppinglist/static/jquery.mobile.min.css https://code.jquery.com/mobile/$(JQUERY_MOBILE_VERSION)/jquery.mobile-$(JQUERY_MOBILE_VERSION).min.css
 	mkdir -p shoppinglist/static/images
 	wget -O shoppinglist/static/images/ajax-loader.gif https://code.jquery.com/mobile/$(JQUERY_MOBILE_VERSION)/images/ajax-loader.gif
-	wget -O shoppinglist/static/images/icons-18-white.png https://code.jquery.com/mobile/$(JQUERY_MOBILE_VERSION)/images/icons-18-white.png
-	wget -O shoppinglist/static/images/icons-18-black.png https://code.jquery.com/mobile/$(JQUERY_MOBILE_VERSION)/images/icons-18-black.png
-	wget -O shoppinglist/static/images/icons-36-white.png https://code.jquery.com/mobile/$(JQUERY_MOBILE_VERSION)/images/icons-36-white.png
-	wget -O shoppinglist/static/images/icons-36-black.png https://code.jquery.com/mobile/$(JQUERY_MOBILE_VERSION)/images/icons-36-black.png
 
 update:
 	git pull
