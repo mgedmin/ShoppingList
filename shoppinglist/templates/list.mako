@@ -292,8 +292,8 @@
       </ul>
       <form class="add-item-row">
         <input id="new-item" type="text">
-        <div class="side-btn ui-btn">
-          <input id="add-item" type="submit" data-type="button" data-icon="plus" data-theme="b" value="Add" data-iconpos="notext">
+        <div id="add-item" class="side-btn ui-btn">
+          <input type="submit" data-type="button" data-icon="plus" data-theme="b" value="Add" data-iconpos="notext">
         </div>
       </form>
     </div>
