@@ -1,17 +1,26 @@
 PYTHON = python
 pypackage = ShoppingList
 egg_link = lib/python*/site-packages/$(pypackage).egg-link
+static_assets = shoppinglist/static/*.css shoppinglist/static/*.js
 
-all: bin/pserve $(egg_link) bin/pytest bin/flake8 ShoppingList.db
+.PHONY: all
+all: bin/pserve $(egg_link) bin/pytest bin/flake8 ShoppingList.db shoppinglist/static/SHA256SUMS
 
-run: bin/pserve $(egg_link) ShoppingList.db
+.PHONY: run
+run: bin/pserve $(egg_link) ShoppingList.db shoppinglist/static/SHA256SUMS
 	bin/pserve development.ini --reload
 
+.PHONY: test
 test: bin/pytest $(egg_link)
 	bin/pytest --cov
 
+.PHONY: lint
 lint: bin/flake8
 	bin/flake8 *.py $(pypackage)
+
+.PHONY: tags
+tags:
+	ctags -R shoppinglist
 
 prod-db: var/ShoppingList.db
 
@@ -21,12 +30,14 @@ var/ShoppingList.db: ShoppingList.db var
 var:
 	install -m 755 -o www-data -g www-data -d var || rmdir var
 
+.PHONY: update-all-packages
 update-all-packages: bin/pip
 	bin/pip install -U pip setuptools wheel
 	bin/pip install -U --upgrade-strategy=eager pytest pytest-cov flake8 watchdog -e .
 	make
 	make update-requirements
 
+.PHONY: update-requirements
 update-requirements: bin/pip
 	PYTHONPATH= bin/pip freeze | grep -v '^-e .*$(pypackage)$$' > requirements.txt
 
@@ -34,6 +45,7 @@ update-requirements: bin/pip
 JQUERY_VERSION = 1.11.1
 JQUERY_MOBILE_VERSION = 1.4.5
 
+.PHONY: update-assets
 update-assets:
 	wget -O shoppinglist/static/jquery.min.js https://code.jquery.com/jquery-$(JQUERY_VERSION).min.js
 	wget -O shoppinglist/static/jquery.mobile.min.js https://code.jquery.com/mobile/$(JQUERY_MOBILE_VERSION)/jquery.mobile-$(JQUERY_MOBILE_VERSION).min.js
@@ -43,23 +55,30 @@ update-assets:
 	wget -O shoppinglist/static/images/icons-png/grid-white.png https://code.jquery.com/mobile/$(JQUERY_MOBILE_VERSION)/images/icons-png/grid-white.png
 	cd shoppinglist/static && sha256sum *.css *.js > SHA256SUMS
 
+.PHONY: update
 update:
 	git pull
 	make
 	touch pyramid.wsgi
 
+.PHONY: clean
 clean:
 	find -name '*.pyc' -delete
 
+.PHONY: dist
 dist: bin/python
 	bin/python setup.py sdist
 
+.PHONY: distclean
 distclean: clean
 	rm -rf bin/ dist/ include/ lib/ *.egg-info/ build/ local/
 	rm -f .coverage tags
 
-ShoppingList.db: $(egg_link)
+ShoppingList.db: | $(egg_link)
 	test -f $@ || bin/init_ShoppingList_db development.ini
+
+shoppinglist/static/SHA256SUMS: $(static_assets)
+	cd shoppinglist/static && sha256sum *.css *.js > SHA256SUMS
 
 $(egg_link): bin/python setup.py
 	bin/pip install -e .[testing] watchdog
