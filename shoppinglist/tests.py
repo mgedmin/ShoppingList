@@ -196,8 +196,10 @@ class FunctionalTests(unittest.TestCase):
         self.assertIn('<h1>Shopping List</h1>', res.text)
 
     def test_html_injection(self):
+        res = self.testapp.get('/', status=200)
+        baseline = res.text.count('</script>')
         with transaction.manager:
             DBSession.add(ListItem("<script>alert(1)</script>"))
         res = self.testapp.get('/', status=200)
-        self.assertEqual(res.text.count('</script>'), 3)
+        self.assertEqual(res.text.count('</script>'), baseline)
         self.assertIn(r'"<script>alert(1)<\/script>"', res.text)
