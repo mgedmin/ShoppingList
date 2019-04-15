@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html>
 <head>
   <meta http-equiv="content-type" content="text/html; charset=utf-8">
@@ -12,6 +13,9 @@
     }
     ul#list > li {
       cursor: pointer;
+    }
+    ul#list > li .e {
+      font-family: emoji, sans-serif;
     }
     /* Checked items; assumes the background is light */
     ul#list > li.checked a:first-child:after {
@@ -91,16 +95,22 @@
   </style>
   <script src="${request.static_url('shoppinglist:static/jquery.min.js')}"></script>
   <script src="${request.static_url('shoppinglist:static/jquery.mobile.min.js')}"></script>
+  <script src="${request.static_url('shoppinglist:static/emoji.js')}"></script>
   <script type="text/javascript">
     $(function(){
         // DOM manipulations and data "model"
         var all_items = function() {
             return $("#list > li");
         }
+        var emojify = function(node) {
+            return node.html(
+                node.html().replace(emoji_re, '<span class="e">$&<' + '/span>')
+            );
+        }
         var add_item = function(title, checked, id) {
             var new_li = $("<li>");
             if (checked) new_li.addClass('checked')
-            new_li.append($('<a class="item">').text(title));
+            new_li.append(emojify($('<a class="item">').text(title)));
             new_li.append($('<a class="delete">'));
             new_li.append($('<input type="hidden">').val(id));
             $("#list").append(new_li).listview('refresh');
