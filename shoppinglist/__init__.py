@@ -15,7 +15,7 @@ def main(global_config, **settings):
     )
     config.include("pyramid_mako")
     config.include("pyramid_tm")
-    config.add_static_view("static", "static", cache_max_age=3600)
+    config.add_static_view("static", "static", cache_max_age=365*24*3600)
     config.add_cache_buster("static", ChecksumCacheBuster("static/SHA256SUMS"))
     config.add_route("home", "/")
     # Let's go nuts with REST, why don't we?
