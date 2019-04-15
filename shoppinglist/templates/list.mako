@@ -93,31 +93,6 @@
       border-bottom: 0;
     }
   </style>
-</head>
-<body>
-  <div data-role="page">
-    <div data-role="header" data-theme="b">
-      <h1>Shopping List</h1>
-      <a href="#menu" class="ui-btn-right" data-icon="grid" data-rel="popup" data-position-to="origin">Menu</a>
-    </div>
-    <div data-role="popup" id="menu" data-theme="a" data-tolerance="44,4,30,15" data-history="false">
-      <ul data-role="listview" data-inset="true" data-theme="a">
-        <li data-icon="false"><a href="#" id="undo">Undo</a></li>
-        <li data-icon="false"><a href="#" id="sort">Sort list</a></li>
-        <li data-icon="false"><a href="#" id="clear">Clear list</a></li>
-      </ul>
-    </div>
-    <div class="ui-content" role="main" id="main">
-      <ul id="list" data-role="listview" data-theme="d" data-split-theme="d" data-split-icon="delete">
-      </ul>
-      <form class="add-item-row">
-        <input id="new-item" type="text" autocomplete="off">
-        <div id="add-item" class="side-btn ui-btn">
-          <input type="submit" data-type="button" data-icon="plus" data-theme="b" value="Add" data-iconpos="notext">
-        </div>
-      </form>
-    </div>
-  </div>
 
   <script src="${request.static_url('shoppinglist:static/jquery.min.js')}"></script>
   <script src="${request.static_url('shoppinglist:static/jquery.mobile.min.js')}"></script>
@@ -324,6 +299,32 @@
 % endfor
     });
   </script>
+
+</head>
+<body>
+  <div data-role="page">
+    <div data-role="header" data-theme="b">
+      <h1>Shopping List</h1>
+      <a href="#menu" class="ui-btn-right" data-icon="grid" data-rel="popup" data-position-to="origin">Menu</a>
+    </div>
+    <div data-role="popup" id="menu" data-theme="a" data-tolerance="44,4,30,15" data-history="false">
+      <ul data-role="listview" data-inset="true" data-theme="a">
+        <li data-icon="false"><a href="#" id="undo">Undo</a></li>
+        <li data-icon="false"><a href="#" id="sort">Sort list</a></li>
+        <li data-icon="false"><a href="#" id="clear">Clear list</a></li>
+      </ul>
+    </div>
+    <div class="ui-content" role="main" id="main">
+      <ul id="list" data-role="listview" data-theme="d" data-split-theme="d" data-split-icon="delete">
+      </ul>
+      <form class="add-item-row">
+        <input id="new-item" type="text" autocomplete="off">
+        <div id="add-item" class="side-btn ui-btn">
+          <input type="submit" data-type="button" data-icon="plus" data-theme="b" value="Add" data-iconpos="notext">
+        </div>
+      </form>
+    </div>
+  </div>
 
 </body>
 </html>
