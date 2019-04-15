@@ -80,6 +80,10 @@ ShoppingList.db: | $(egg_link)
 shoppinglist/static/SHA256SUMS: $(static_assets)
 	cd shoppinglist/static && sha256sum *.css *.js > SHA256SUMS
 
+.PHONY: update-static-manifest
+update-static-manifest:
+	make -B shoppinglist/static/SHA256SUMS
+
 $(egg_link): bin/python setup.py
 	bin/pip install -e .[testing] watchdog
 
