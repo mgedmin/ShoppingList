@@ -6,6 +6,36 @@ static_assets = shoppinglist/static/*.css shoppinglist/static/*.js
 .PHONY: all
 all: bin/pserve $(egg_link) bin/pytest bin/flake8 ShoppingList.db shoppinglist/static/SHA256SUMS
 
+.PHONY: help
+help:
+	@echo "make             build the thing"
+	@echo "make run         start a local dev server"
+	@echo "make test        run tests"
+	@echo "make lint        run flake8"
+	@echo "make tags        run ctags"
+	@echo "make prod-db     create new production sqlite DB if missing"
+	@echo "make update-all-packages"
+	@echo "                 upgrade all Python packages in requirements.txt"
+	@echo "                 to latest upstream versions"
+	@echo "make update-requirements"
+	@echo "                 re-generate requirement.txt from currently"
+	@echo "                 installed package versions"
+	@echo "make update-assets"
+	@echo "                 download JavaScript assets, versions specified"
+	@echo "                 in the Makefile:"
+	@echo "                   JQUERY_VERSION = $(JQUERY_VERSION)"
+	@echo "                   JQUERY_MOBILE_VERSION = $(JQUERY_MOBILE_VERSION)"
+	@echo "make update      pull updated version from git"
+	@echo "make clean       remove some build artefacts"
+	@echo "make dist        build a source distribution in dist/"
+	@echo "make distclean   remove all build artefacts"
+	@echo "make update-static-manifest"
+	@echo "                 re-generate manifest of static assets"
+	@echo "                 (usually this happens automatically)"
+	@echo "make recreate-virtualenv"
+	@echo "                 re-create the virtualenv"
+	@echo "                 (after e.g. upgrading system Python)"
+
 .PHONY: run
 run: bin/pserve $(egg_link) ShoppingList.db shoppinglist/static/SHA256SUMS
 	bin/pserve development.ini --reload
@@ -22,6 +52,7 @@ lint: bin/flake8
 tags:
 	ctags -R shoppinglist
 
+.PHONY: prod-db
 prod-db: var/ShoppingList.db
 
 var/ShoppingList.db: ShoppingList.db var
