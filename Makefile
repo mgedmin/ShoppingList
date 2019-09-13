@@ -1,4 +1,4 @@
-PYTHON = python
+PYTHON = python3
 pypackage = ShoppingList
 egg_link = lib/python*/site-packages/$(pypackage).egg-link
 static_assets = shoppinglist/static/*.css shoppinglist/static/*.js
