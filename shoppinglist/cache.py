@@ -8,7 +8,7 @@ class ChecksumCacheBuster(QueryStringCacheBuster, ManifestCacheBuster):
 
     def parse_manifest(self, content):
         manifest = {}
-        for line in content.splitlines():
+        for line in content.decode().splitlines():
             checksum, filename = line.split(None, 1)
             filename = filename.lstrip("*")
             manifest[filename] = checksum
