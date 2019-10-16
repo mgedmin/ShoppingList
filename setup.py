@@ -34,11 +34,10 @@ tests_require = [
 
 setup(
     name="ShoppingList",
-    version="0.2",
+    version="0.3",
     description="A very simple shopping list webapp",
     long_description=README + "\n\n" + CHANGES,
     classifiers=[
-        "Programming Language :: Python :: 2.7",
         "Programming Language :: Python :: 3.6",
         "Programming Language :: Python :: 3.7",
         "Framework :: Pyramid",
