@@ -116,16 +116,16 @@ update-static-manifest:
 	make -B shoppinglist/static/SHA256SUMS
 
 $(egg_link): bin/python setup.py
-	bin/pip install -e .[testing] watchdog
+	bin/pip install -e .[testing] watchdog -c requirements.txt
 
 bin/pserve: bin/pip
-	bin/pip install pyramid watchdog
+	bin/pip install pyramid watchdog -c requirements.txt
 
 bin/pytest: bin/pip
-	bin/pip install pytest pytest-cov
+	bin/pip install pytest pytest-cov -c requirements.txt
 
 bin/flake8: bin/pip
-	bin/pip install flake8
+	bin/pip install flake8 -c requirements.txt
 
 bin/python bin/pip:
 	virtualenv -p $(PYTHON) .
