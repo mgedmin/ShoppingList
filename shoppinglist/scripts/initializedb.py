@@ -4,7 +4,7 @@ import transaction
 
 from pyramid.paster import get_appsettings, setup_logging
 
-from ..models import Base, get_session, get_engine, get_session_factory
+from ..models import Base, get_dbsession, get_engine, get_session_factory
 
 
 def usage(argv):
@@ -24,7 +24,7 @@ def main(argv=sys.argv):
     settings = get_appsettings(config_uri)
     engine = get_engine(settings)
     session_factory = get_session_factory(engine)
-    dbsession = get_session(transaction.manager, session_factory)
+    dbsession = get_dbsession(transaction.manager, session_factory)
     Base.metadata.create_all(engine)
     with transaction.manager:
         # create any database rows that must exist in the DB

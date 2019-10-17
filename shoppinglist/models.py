@@ -15,13 +15,13 @@ def includeme(config):
     session_factory = get_session_factory(get_engine(settings))
     config.registry['dbsession_factory'] = session_factory
     config.add_request_method(
-        lambda r: get_session(r.tm, session_factory),
+        lambda r: get_dbsession(r.tm, session_factory),
         'dbsession',
         reify=True
     )
 
 
-def get_session(transaction_manager, session_factory):
+def get_dbsession(transaction_manager, session_factory):
     dbsession = session_factory()
     zope.sqlalchemy.register(
         dbsession, transaction_manager=transaction_manager)
