@@ -64,7 +64,7 @@ var:
 .PHONY: update-all-packages
 update-all-packages: bin/pip
 	bin/pip install -U pip setuptools wheel
-	bin/pip install -U --upgrade-strategy=eager pytest pytest-cov flake8 watchdog -e .
+	bin/pip install -U --upgrade-strategy=eager pytest pytest-cov flake8 watchdog -e .[testing]
 	make
 	make update-requirements
 
