@@ -4,7 +4,9 @@ import transaction
 from pyramid import testing
 from pyramid.httpexceptions import HTTPNotFound
 
-from .models import Base, ListItem, get_session, get_engine, get_dbmaker
+from .models import (
+    Base, ListItem, get_session, get_engine, get_session_factory,
+)
 
 
 class BaseTest(unittest.TestCase):
@@ -17,8 +19,8 @@ class BaseTest(unittest.TestCase):
 
         settings = self.config.get_settings()
         self.engine = get_engine(settings)
-        dbmaker = get_dbmaker(self.engine)
-        self.session = get_session(transaction.manager, dbmaker)
+        session_factory = get_session_factory(self.engine)
+        self.session = get_session(transaction.manager, session_factory)
 
         self.init_db()
 
@@ -200,8 +202,8 @@ class FunctionalTests(unittest.TestCase):
         cls.engine = session_factory.kw['bind']
         Base.metadata.create_all(bind=cls.engine)
 
-        dbmaker = get_dbmaker(cls.engine)
-        cls.session = get_session(transaction.manager, dbmaker)
+        session_factory = get_session_factory(cls.engine)
+        cls.session = get_session(transaction.manager, session_factory)
 
     @classmethod
     def tearDownClass(cls):

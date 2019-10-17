@@ -12,17 +12,17 @@ def includeme(config):
     settings['tm.manager_hook'] = 'pyramid_tm.explicit_manager'
     config.include("pyramid_tm")
     config.include("pyramid_retry")
-    dbmaker = get_dbmaker(get_engine(settings))
-    config.registry['dbsession_factory'] = dbmaker
+    session_factory = get_session_factory(get_engine(settings))
+    config.registry['dbsession_factory'] = session_factory
     config.add_request_method(
-        lambda r: get_session(r.tm, dbmaker),
+        lambda r: get_session(r.tm, session_factory),
         'dbsession',
         reify=True
     )
 
 
-def get_session(transaction_manager, dbmaker):
-    dbsession = dbmaker()
+def get_session(transaction_manager, session_factory):
+    dbsession = session_factory()
     zope.sqlalchemy.register(
         dbsession, transaction_manager=transaction_manager)
     return dbsession
@@ -32,10 +32,10 @@ def get_engine(settings, prefix='sqlalchemy.'):
     return engine_from_config(settings, prefix)
 
 
-def get_dbmaker(engine):
-    dbmaker = sessionmaker()
-    dbmaker.configure(bind=engine)
-    return dbmaker
+def get_session_factory(engine):
+    factory = sessionmaker()
+    factory.configure(bind=engine)
+    return factory
 
 
 class ListItem(Base):
