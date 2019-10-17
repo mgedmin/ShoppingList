@@ -10,7 +10,6 @@ def main(global_config, **settings):
         {"mako.imports": "from shoppinglist.filters import json"}
     )
     config.include("pyramid_mako")
-    config.include("pyramid_tm")
     config.include(".models")
     config.add_static_view("static", "static", cache_max_age=365*24*3600)
     config.add_cache_buster("static", ChecksumCacheBuster("static/SHA256SUMS"))

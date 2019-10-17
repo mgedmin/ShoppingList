@@ -22,6 +22,7 @@ requires = [
     "pyramid",
     "pyramid_debugtoolbar",
     "pyramid_mako",
+    "pyramid_retry",
     "pyramid_tm",
     "transaction",
     "waitress",

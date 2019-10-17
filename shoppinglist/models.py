@@ -9,6 +9,9 @@ Base = declarative_base()
 
 def includeme(config):
     settings = config.get_settings()
+    settings['tm.manager_hook'] = 'pyramid_tm.explicit_manager'
+    config.include("pyramid_tm")
+    config.include("pyramid_retry")
     dbmaker = get_dbmaker(get_engine(settings))
     config.registry['dbsession_factory'] = dbmaker
     config.add_request_method(
