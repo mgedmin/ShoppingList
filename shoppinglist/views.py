@@ -4,13 +4,13 @@ from pyramid.httpexceptions import HTTPNotFound
 from sqlalchemy.exc import DBAPIError
 from sqlalchemy.orm.exc import NoResultFound
 
-from .models import DBSession, ListItem
+from .models import ListItem
 
 
 @view_config(route_name="home", renderer="shoppinglist:templates/list.mako")
 def main_view(request):
     try:
-        items = DBSession.query(ListItem).all()
+        items = request.dbsession.query(ListItem).all()
     except DBAPIError:
         return Response(
             conn_err_msg, content_type="text/plain", status_int=500
@@ -37,7 +37,7 @@ try it again.
 
 @view_config(route_name="list_items", renderer="json")
 def list_items(request):
-    items = DBSession.query(ListItem).all()
+    items = request.dbsession.query(ListItem).all()
     return {
         "success": "",
         "items": [
@@ -55,8 +55,8 @@ def add_item(request):
     item = ListItem(title)
     if request.POST.get("checked", "").lower() == "true":
         item.checked = True
-    DBSession.add(item)
-    DBSession.flush()  # force ID allocation
+    request.dbsession.add(item)
+    request.dbsession.flush()  # force ID allocation
     return {"success": 'added "%s"' % title, "id": item.id}
 
 
@@ -64,10 +64,10 @@ def add_item(request):
 def remove_item(request):
     item_id = request.matchdict["id"]
     try:
-        item = DBSession.query(ListItem).filter_by(id=item_id).one()
+        item = request.dbsession.query(ListItem).filter_by(id=item_id).one()
     except NoResultFound:
         return HTTPNotFound()
-    DBSession.delete(item)
+    request.dbsession.delete(item)
     return {"success": 'removed "%s"' % item.title}
 
 
@@ -75,7 +75,7 @@ def remove_item(request):
 def check_item(request):
     item_id = request.matchdict["id"]
     try:
-        item = DBSession.query(ListItem).filter_by(id=item_id).one()
+        item = request.dbsession.query(ListItem).filter_by(id=item_id).one()
     except NoResultFound:
         return HTTPNotFound()
     item.checked = True
@@ -86,7 +86,7 @@ def check_item(request):
 def uncheck_item(request):
     item_id = request.matchdict["id"]
     try:
-        item = DBSession.query(ListItem).filter_by(id=item_id).one()
+        item = request.dbsession.query(ListItem).filter_by(id=item_id).one()
     except NoResultFound:
         return HTTPNotFound()
     item.checked = False
@@ -95,5 +95,5 @@ def uncheck_item(request):
 
 @view_config(route_name="clear_list", renderer="json")
 def clear_list(request):
-    n = DBSession.query(ListItem).delete()
+    n = request.dbsession.query(ListItem).delete()
     return {"success": "deleted %d items" % n}

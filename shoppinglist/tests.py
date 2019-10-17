@@ -4,36 +4,51 @@ import transaction
 from pyramid import testing
 from pyramid.httpexceptions import HTTPNotFound
 
-from .models import DBSession, Base, ListItem
+from .models import Base, ListItem, get_session, get_engine, get_dbmaker
 
 
-class TestViews(unittest.TestCase):
+class BaseTest(unittest.TestCase):
+
     def setUp(self):
-        self.config = testing.setUp()
-        from sqlalchemy import create_engine
+        self.config = testing.setUp(settings={
+            'sqlalchemy.url': 'sqlite:///:memory:',
+        })
+        self.config.include('.models')
 
-        engine = create_engine("sqlite://")
-        DBSession.configure(bind=engine)
-        Base.metadata.create_all(engine)
+        settings = self.config.get_settings()
+        self.engine = get_engine(settings)
+        dbmaker = get_dbmaker(self.engine)
+        self.session = get_session(transaction.manager, dbmaker)
+
+        self.init_db()
+
+    def init_db(self):
+        Base.metadata.create_all(self.engine)
         with transaction.manager:
-            DBSession.add(ListItem("bread"))
-            DBSession.add(ListItem("juice", checked=True))
+            self.session.add(ListItem("bread"))
+            self.session.add(ListItem("juice", checked=True))
 
     def tearDown(self):
-        DBSession.remove()
+        transaction.abort()
         testing.tearDown()
+
+    def dummy_request(self, **kwargs):
+        return testing.DummyRequest(dbsession=self.session, **kwargs)
+
+
+class TestViews(BaseTest):
 
     def test_main_view(self):
         from .views import main_view
 
-        request = testing.DummyRequest()
+        request = self.dummy_request()
         info = main_view(request)
         self.assertEqual(len(info["items"]), 2)
 
     def test_list_items(self):
         from .views import list_items
 
-        request = testing.DummyRequest()
+        request = self.dummy_request()
         info = list_items(request)
         self.assertEqual(len(info["items"]), 2)
 
@@ -41,10 +56,10 @@ class TestViews(unittest.TestCase):
         from .models import ListItem
         from .views import add_item
 
-        request = testing.DummyRequest(post=dict(title="apples "))
+        request = self.dummy_request(post=dict(title="apples "))
         info = add_item(request)
         self.assertEqual(info["success"], 'added "apples"')
-        item = DBSession.query(ListItem).filter_by(id=info["id"]).one()
+        item = self.session.query(ListItem).filter_by(id=info["id"]).one()
         self.assertEqual(item.title, "apples")
         self.assertEqual(item.checked, False)
 
@@ -52,12 +67,12 @@ class TestViews(unittest.TestCase):
         from .models import ListItem
         from .views import add_item
 
-        request = testing.DummyRequest(
+        request = self.dummy_request(
             post=dict(title="apples ", checked="true")
         )
         info = add_item(request)
         self.assertEqual(info["success"], 'added "apples"')
-        item = DBSession.query(ListItem).filter_by(id=info["id"]).one()
+        item = self.session.query(ListItem).filter_by(id=info["id"]).one()
         self.assertEqual(item.title, "apples")
         self.assertEqual(item.checked, True)
 
@@ -65,26 +80,26 @@ class TestViews(unittest.TestCase):
         from .models import ListItem
         from .views import add_item
 
-        request = testing.DummyRequest(
+        request = self.dummy_request(
             post=dict(title="apples ", checked="false")
         )
         info = add_item(request)
         self.assertEqual(info["success"], 'added "apples"')
-        item = DBSession.query(ListItem).filter_by(id=info["id"]).one()
+        item = self.session.query(ListItem).filter_by(id=info["id"]).one()
         self.assertEqual(item.title, "apples")
         self.assertEqual(item.checked, False)
 
     def test_add_item_no_title(self):
         from .views import add_item
 
-        request = testing.DummyRequest()
+        request = self.dummy_request()
         info = add_item(request)
         self.assertEqual(info["error"], "'title' parameter blank or missing")
 
     def test_add_item_blank_title(self):
         from .views import add_item
 
-        request = testing.DummyRequest(post=dict(title=" "))
+        request = self.dummy_request(post=dict(title=" "))
         info = add_item(request)
         self.assertEqual(info["error"], "'title' parameter blank or missing")
 
@@ -92,17 +107,17 @@ class TestViews(unittest.TestCase):
         from .models import ListItem
         from .views import remove_item
 
-        item = DBSession.query(ListItem).filter_by(title="juice").one()
-        request = testing.DummyRequest()
+        item = self.session.query(ListItem).filter_by(title="juice").one()
+        request = self.dummy_request()
         request.matchdict["id"] = str(item.id)
         info = remove_item(request)
         self.assertEqual(info["success"], 'removed "juice"')
-        self.assertEqual(DBSession.query(ListItem).count(), 1)
+        self.assertEqual(self.session.query(ListItem).count(), 1)
 
     def test_remove_item_not_found(self):
         from .views import remove_item
 
-        request = testing.DummyRequest()
+        request = self.dummy_request()
         request.matchdict["id"] = u"12345xyzzy"
         info = remove_item(request)
         self.assertTrue(isinstance(info, HTTPNotFound))
@@ -111,8 +126,8 @@ class TestViews(unittest.TestCase):
         from .models import ListItem
         from .views import check_item
 
-        item = DBSession.query(ListItem).filter_by(title="bread").one()
-        request = testing.DummyRequest()
+        item = self.session.query(ListItem).filter_by(title="bread").one()
+        request = self.dummy_request()
         request.matchdict["id"] = str(item.id)
         info = check_item(request)
         self.assertEqual(info["success"], 'checked "bread"')
@@ -121,7 +136,7 @@ class TestViews(unittest.TestCase):
     def test_check_item_not_found(self):
         from .views import check_item
 
-        request = testing.DummyRequest()
+        request = self.dummy_request()
         request.matchdict["id"] = u"12345xyzzy"
         info = check_item(request)
         self.assertTrue(isinstance(info, HTTPNotFound))
@@ -130,8 +145,8 @@ class TestViews(unittest.TestCase):
         from .models import ListItem
         from .views import uncheck_item
 
-        item = DBSession.query(ListItem).filter_by(title="juice").one()
-        request = testing.DummyRequest()
+        item = self.session.query(ListItem).filter_by(title="juice").one()
+        request = self.dummy_request()
         request.matchdict["id"] = str(item.id)
         info = uncheck_item(request)
         self.assertEqual(info["success"], 'unchecked "juice"')
@@ -140,7 +155,7 @@ class TestViews(unittest.TestCase):
     def test_uncheck_item_not_found(self):
         from .views import uncheck_item
 
-        request = testing.DummyRequest()
+        request = self.dummy_request()
         request.matchdict["id"] = u"12345xyzzy"
         info = uncheck_item(request)
         self.assertTrue(isinstance(info, HTTPNotFound))
@@ -149,47 +164,48 @@ class TestViews(unittest.TestCase):
         from .models import ListItem
         from .views import clear_list
 
-        request = testing.DummyRequest()
+        request = self.dummy_request()
         info = clear_list(request)
         self.assertEqual(info["success"], "deleted 2 items")
-        self.assertEqual(DBSession.query(ListItem).count(), 0)
+        self.assertEqual(self.session.query(ListItem).count(), 0)
 
 
-class TestUninitializedDB(unittest.TestCase):
+class TestUninitializedDB(BaseTest):
 
-    def setUp(self):
-        self.config = testing.setUp()
-        from sqlalchemy import create_engine
-
-        engine = create_engine("sqlite://")
-        DBSession.configure(bind=engine)
-
-    def tearDown(self):
-        DBSession.remove()
-        testing.tearDown()
+    def init_db(self):
+        pass
 
     def test_main_view(self):
         from .views import main_view
 
-        request = testing.DummyRequest()
+        request = self.dummy_request()
         res = main_view(request)
         self.assertEqual(res.status_int, 500)
 
 
 class FunctionalTests(unittest.TestCase):
 
-    def setUp(self):
+    @classmethod
+    def setUpClass(cls):
         from webtest import TestApp
         from . import main
 
-        app = main({}, **{
+        settings = {
             'sqlalchemy.url': 'sqlite:///:memory:'
-        })
-        Base.metadata.create_all(DBSession.bind)
-        self.testapp = TestApp(app)
+        }
+        app = main({}, **settings)
+        cls.testapp = TestApp(app)
 
-    def tearDown(self):
-        DBSession.remove()
+        session_factory = app.registry['dbsession_factory']
+        cls.engine = session_factory.kw['bind']
+        Base.metadata.create_all(bind=cls.engine)
+
+        dbmaker = get_dbmaker(cls.engine)
+        cls.session = get_session(transaction.manager, dbmaker)
+
+    @classmethod
+    def tearDownClass(cls):
+        Base.metadata.drop_all(bind=cls.engine)
 
     def test_root(self):
         res = self.testapp.get('/', status=200)
@@ -199,7 +215,7 @@ class FunctionalTests(unittest.TestCase):
         res = self.testapp.get('/', status=200)
         baseline = res.text.count('</script>')
         with transaction.manager:
-            DBSession.add(ListItem("<script>alert(1)</script>"))
+            self.session.add(ListItem("<script>alert(1)</script>"))
         res = self.testapp.get('/', status=200)
         self.assertEqual(res.text.count('</script>'), baseline)
         self.assertIn(r'"<script>alert(1)<\/script>"', res.text)

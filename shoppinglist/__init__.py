@@ -1,20 +1,17 @@
 from pyramid.config import Configurator
-from sqlalchemy import engine_from_config
 
-from .models import DBSession
 from .cache import ChecksumCacheBuster
 
 
 def main(global_config, **settings):
     """This function returns a Pyramid WSGI application."""
-    engine = engine_from_config(settings, "sqlalchemy.")
-    DBSession.configure(bind=engine)
     config = Configurator(settings=settings)
     config.add_settings(
         {"mako.imports": "from shoppinglist.filters import json"}
     )
     config.include("pyramid_mako")
     config.include("pyramid_tm")
+    config.include(".models")
     config.add_static_view("static", "static", cache_max_age=365*24*3600)
     config.add_cache_buster("static", ChecksumCacheBuster("static/SHA256SUMS"))
     config.add_route("home", "/")

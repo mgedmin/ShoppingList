@@ -1,11 +1,38 @@
-from sqlalchemy import Column, Integer, Text, Boolean
+from sqlalchemy import Column, Integer, Text, Boolean, engine_from_config
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import scoped_session, sessionmaker
-from zope.sqlalchemy import ZopeTransactionExtension
+from sqlalchemy.orm import sessionmaker
+import zope.sqlalchemy
 
 
-DBSession = scoped_session(sessionmaker(extension=ZopeTransactionExtension()))
 Base = declarative_base()
+
+
+def includeme(config):
+    settings = config.get_settings()
+    dbmaker = get_dbmaker(get_engine(settings))
+    config.registry['dbsession_factory'] = dbmaker
+    config.add_request_method(
+        lambda r: get_session(r.tm, dbmaker),
+        'dbsession',
+        reify=True
+    )
+
+
+def get_session(transaction_manager, dbmaker):
+    dbsession = dbmaker()
+    zope.sqlalchemy.register(
+        dbsession, transaction_manager=transaction_manager)
+    return dbsession
+
+
+def get_engine(settings, prefix='sqlalchemy.'):
+    return engine_from_config(settings, prefix)
+
+
+def get_dbmaker(engine):
+    dbmaker = sessionmaker()
+    dbmaker.configure(bind=engine)
+    return dbmaker
 
 
 class ListItem(Base):

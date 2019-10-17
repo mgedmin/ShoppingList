@@ -2,10 +2,9 @@ import os
 import sys
 import transaction
 
-from sqlalchemy import engine_from_config
 from pyramid.paster import get_appsettings, setup_logging
 
-from ..models import DBSession, Base
+from ..models import Base, get_session, get_engine, get_dbmaker
 
 
 def usage(argv):
@@ -23,9 +22,11 @@ def main(argv=sys.argv):
     config_uri = argv[1]
     setup_logging(config_uri)
     settings = get_appsettings(config_uri)
-    engine = engine_from_config(settings, "sqlalchemy.")
-    DBSession.configure(bind=engine)
+    engine = get_engine(settings)
+    dbmaker = get_dbmaker(engine)
+    dbsession = get_session(transaction.manager, dbmaker)
     Base.metadata.create_all(engine)
     with transaction.manager:
         # create any database rows that must exist in the DB
+        # dbsession.add(MyModel(...))
         pass
