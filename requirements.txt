@@ -29,7 +29,7 @@ pyramid-retry==2.1
 pyramid-tm==2.3
 pytest==5.2.1
 pytest-cov==2.8.1
-PyYAML==5.1.2
+PyYAML==5.2
 repoze.lru==0.7
 six==1.12.0
 soupsieve==1.9.4
