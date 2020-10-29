@@ -1,8 +1,8 @@
 ShoppingList README
 ===================
 
-.. image:: https://travis-ci.org/mgedmin/ShoppingList.svg?branch=master
-    :target: https://travis-ci.org/mgedmin/ShoppingList
+.. image:: https://travis-ci.com/mgedmin/ShoppingList.svg?branch=master
+    :target: https://travis-ci.com/mgedmin/ShoppingList
 
 Small web-based shopping list application for me:
 
