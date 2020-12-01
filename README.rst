@@ -1,8 +1,8 @@
 ShoppingList README
 ===================
 
-.. image:: https://travis-ci.com/mgedmin/ShoppingList.svg?branch=master
-    :target: https://travis-ci.com/mgedmin/ShoppingList
+.. image:: https://github.com/mgedmin/ShoppingList/workflows/build/badge.svg?branch=master
+    :target: https://github.com/mgedmin/ShoppingList/actions
 
 Small web-based shopping list application for me:
 
