@@ -120,12 +120,15 @@ $(egg_link): bin/python setup.py
 
 bin/pserve: bin/pip
 	bin/pip install pyramid watchdog -c requirements.txt
+	touch -c $@
 
 bin/pytest: bin/pip
 	bin/pip install pytest pytest-cov -c requirements.txt
+	touch -c $@
 
 bin/flake8: bin/pip
 	bin/pip install flake8 -c requirements.txt
+	touch -c $@
 
 bin/python bin/pip:
 	virtualenv -p $(PYTHON) .
