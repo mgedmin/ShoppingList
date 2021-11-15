@@ -1,6 +1,6 @@
 PYTHON = python3
 pypackage = ShoppingList
-egg_link = lib/python*/site-packages/$(pypackage).egg-link
+egg_link = .venv/lib/python*/site-packages/$(pypackage).egg-link
 static_assets = shoppinglist/static/*.css shoppinglist/static/*.js
 
 .PHONY: all
@@ -102,7 +102,7 @@ dist: bin/python
 
 .PHONY: distclean
 distclean: clean
-	rm -rf bin/ dist/ include/ lib/ *.egg-info/ build/ local/
+	rm -rf bin/ dist/ include/ lib/ *.egg-info/ build/ local/ .venv/
 	rm -f .coverage tags
 
 ShoppingList.db: | $(egg_link)
@@ -120,18 +120,28 @@ $(egg_link): bin/python setup.py
 
 bin/pserve: bin/pip
 	bin/pip install pyramid watchdog -c requirements.txt
+	ln -sfrt bin/ .venv/$@
 	touch -c $@
 
 bin/pytest: bin/pip
 	bin/pip install pytest pytest-cov -c requirements.txt
+	ln -sfrt bin/ .venv/$@
 	touch -c $@
 
 bin/flake8: bin/pip
 	bin/pip install flake8 -c requirements.txt
+	ln -sfrt bin/ .venv/$@
 	touch -c $@
 
-bin/python bin/pip:
-	virtualenv -p $(PYTHON) .
+bin/python bin/pip: | bin .venv
+	ln -sfrt bin/ .venv/$@
+
+bin:
+	mkdir $@
+
+.venv:
+	virtualenv -p $(PYTHON) .venv
+	.venv/bin/pip install -U pip
 
 .PHONY: recreate-virtualenv
 recreate-virtualenv:
