@@ -39,7 +39,6 @@ setup(
     description="A very simple shopping list webapp",
     long_description=README + "\n\n" + CHANGES,
     classifiers=[
-        "Programming Language :: Python :: 3.6",
         "Programming Language :: Python :: 3.7",
         "Programming Language :: Python :: 3.8",
         "Programming Language :: Python :: 3.9",
