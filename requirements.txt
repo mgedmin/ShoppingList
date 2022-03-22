@@ -33,7 +33,7 @@ tomli==1.2.2
 transaction==3.0.1
 translationstring==1.4
 venusian==3.0.0
-waitress==2.0.0
+waitress==2.1.1
 watchdog==2.1.6
 WebOb==1.8.7
 WebTest==3.0.0
