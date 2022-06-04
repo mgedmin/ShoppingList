@@ -106,7 +106,7 @@ distclean: clean
 	rm -f .coverage tags
 
 ShoppingList.db: | $(egg_link)
-	test -f $@ || bin/init_ShoppingList_db development.ini
+	test -f $@ || .venv/bin/init_ShoppingList_db development.ini
 
 shoppinglist/static/SHA256SUMS: $(static_assets)
 	cd shoppinglist/static && sha256sum *.css *.js > SHA256SUMS
