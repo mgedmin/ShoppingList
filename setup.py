@@ -16,7 +16,7 @@ CHANGES = read("CHANGES.rst")
 
 
 requires = [
-    "SQLAlchemy",
+    "SQLAlchemy < 2",
     "markupsafe",
     "plaster_pastedeploy",
     "pyramid",
