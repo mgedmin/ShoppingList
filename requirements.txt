@@ -19,7 +19,7 @@ pycodestyle==2.10.0
 pyflakes==3.0.1
 Pygments==2.15.0
 pyparsing==3.0.9
-pyramid==2.0.1
+pyramid==2.0.2
 pyramid-debugtoolbar==4.10
 pyramid-mako==1.1.0
 pyramid-retry==2.1.1
