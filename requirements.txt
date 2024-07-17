@@ -41,4 +41,4 @@ WebTest==3.0.0
 zope.deprecation==5.0
 zope.interface==6.4.post2
 zope.sqlalchemy==3.1
-setuptools>=65.5.1 # not directly required, pinned by Snyk to avoid a vulnerability
+setuptools>=70.0.0 # not directly required, pinned by Snyk to avoid a vulnerability
