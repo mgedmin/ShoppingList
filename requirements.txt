@@ -35,11 +35,9 @@ transaction==5.0
 translationstring==1.4
 venusian==3.1.0
 waitress==3.0.1
-watchdog==4.0.1
-WebOb==1.8.7
+watchdog==6.0.0
+WebOb==1.8.9
 WebTest==3.0.1
 zope.deprecation==5.0
-zope.interface==6.4.post2
+zope.interface==7.1.1
 zope.sqlalchemy==3.1
-setuptools>=70.0.0 # not directly required, pinned by Snyk to avoid a vulnerability
-zipp>=3.19.1 # not directly required, pinned by Snyk to avoid a vulnerability
