@@ -67,7 +67,7 @@ update-all-packages:
 
 .PHONY: update-requirements
 update-requirements:
-	uv export --format requirements.txt --no-dev --no-emit-project -o requirements.txt
+	uv export --format requirements.txt --no-dev --no-emit-project --no-hashes -o requirements.txt
 
 
 JQUERY_VERSION = 1.11.1
