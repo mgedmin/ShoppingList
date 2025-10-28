@@ -44,7 +44,7 @@ test:
 	uv run pytest --cov
 
 .PHONY: lint
-lint: 
+lint:
 	uv run flake8 shoppinglist/
 
 .PHONY: tags
