@@ -24,7 +24,7 @@ def main(argv=sys.argv):
     settings = get_appsettings(config_uri)
     engine = get_engine(settings)
     session_factory = get_session_factory(engine)
-    dbsession = get_dbsession(transaction.manager, session_factory)
+    dbsession = get_dbsession(transaction.manager, session_factory)  # noqa
     Base.metadata.create_all(engine)
     with transaction.manager:
         # create any database rows that must exist in the DB

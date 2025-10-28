@@ -1,0 +1,62 @@
+[project]
+name = "ShoppingList"
+version = "0.4"
+description = "A very simple shopping list webapp"
+authors = [
+    { name = "Marius Gedminas", email = "marius@gedmin.as" }
+]
+readme = "README.rst"
+keywords = ["web", "wsgi", "pyramid", "shopping", "list"]
+classifiers = [
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "Framework :: Pyramid",
+    "Topic :: Internet :: WWW/HTTP",
+    "Topic :: Internet :: WWW/HTTP :: WSGI :: Application",
+]
+license = "GPL-2.0-or-later"
+requires-python = ">=3.10"
+dependencies = [
+    "SQLAlchemy < 2",
+    "markupsafe",
+    "plaster_pastedeploy",
+    "pyramid",
+    "pyramid_debugtoolbar",
+    "pyramid_mako",
+    "pyramid_retry",
+    "pyramid_tm",
+    "transaction",
+    "waitress",
+    "zope.sqlalchemy",
+]
+
+[project.optional-dependencies]
+testing = [
+    "WebTest",
+]
+
+[project.urls]
+Homepage = "https://github.com/mgedmin/ShoppingList"
+
+[project.scripts]
+init_ShoppingList_db = "shoppinglist.scripts.initializedb:main"
+
+[project.entry-points."paste.app_factory"]
+main = "shoppinglist:main"
+
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[dependency-groups]
+dev = [
+    "flake8>=7.3.0",
+    "pyramid>=2.0.2",
+    "pytest>=8.4.2",
+    "pytest-cov>=7.0.0",
+    "watchdog>=6.0.0",
+    "ShoppingList[testing]",
+]
