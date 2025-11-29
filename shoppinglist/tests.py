@@ -1,11 +1,15 @@
 import unittest
-import transaction
 
+import transaction
 from pyramid import testing
 from pyramid.httpexceptions import HTTPNotFound
 
 from .models import (
-    Base, ListItem, get_dbsession, get_engine, get_session_factory,
+    Base,
+    ListItem,
+    get_dbsession,
+    get_engine,
+    get_session_factory,
 )
 
 
@@ -191,6 +195,7 @@ class FunctionalTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         from webtest import TestApp
+
         from . import main
 
         settings = {
