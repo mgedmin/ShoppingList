@@ -1,4 +1,6 @@
-from pyramid.httpexceptions import HTTPNotFound
+import time
+
+from pyramid.httpexceptions import HTTPFound, HTTPNotFound
 from pyramid.response import Response
 from pyramid.view import view_config
 from sqlalchemy.exc import DBAPIError
@@ -9,12 +11,46 @@ from .models import ListItem
 
 @view_config(route_name="home", renderer="shoppinglist:templates/list.mako")
 def main_view(request):
+    check = request.POST.get('check')
+    if check:
+        try:
+            item = request.dbsession.query(ListItem).filter_by(id=check).one()
+        except NoResultFound:
+            pass
+        else:
+            item.checked = True
+    uncheck = request.POST.get('uncheck')
+    if uncheck:
+        try:
+            item = (
+                request.dbsession.query(ListItem).filter_by(id=uncheck).one()
+            )
+        except NoResultFound:
+            pass
+        else:
+            item.checked = False
+    remove = request.POST.get('remove')
+    if remove:
+        try:
+            item = request.dbsession.query(ListItem).filter_by(id=remove).one()
+        except NoResultFound:
+            pass
+        else:
+            request.dbsession.delete(item)
+    add = request.POST.get('add')
+    if add:
+        item = ListItem(add)
+        request.dbsession.add(item)
+        request.dbsession.flush()  # force ID allocation
+    if request.method == 'POST':
+        return HTTPFound(location=f"/?cache_bust={time.time()}")
     try:
         items = request.dbsession.query(ListItem).all()
     except DBAPIError:
         return Response(
             conn_err_msg, content_type="text/plain", status_int=500
         )
+    request.response.cache_control = 'no-cache'
     return {"items": items}
 
 

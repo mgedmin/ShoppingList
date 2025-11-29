@@ -109,11 +109,10 @@
             );
         }
         var add_item = function(title, checked, id) {
-            var new_li = $("<li>");
+            var new_li = $("<li>").data('id', id);
             if (checked) new_li.addClass('checked')
             new_li.append(emojify($('<a class="item">').text(title)));
             new_li.append($('<a class="delete">'));
-            new_li.append($('<input type="hidden">').val(id));
             $("#list").append(new_li).listview('refresh');
             return new_li;
         };
@@ -131,7 +130,7 @@
             dom_node._item_id_callbacks = callbacks;
         }
         var set_item_id = function(li, id) {
-            li.find('input').val(id);
+            li.data('id', id);
             if (id) {
                 var dom_node = li[0];
                 var callbacks = dom_node._item_id_callbacks || [];
@@ -142,7 +141,7 @@
             }
         };
         var get_item_id = function(li) {
-            return li.find('input').val();
+            return li.data('id');
         };
         var is_checked = function(li) {
             return li.hasClass("checked");
@@ -154,6 +153,8 @@
             return li.find("a.item").text();
         };
         var quoted_item_title = function(li) {
+            // this is used purely for presentation so it doesn't matter if
+            // item_title() returns a string containing "
             return '"' + item_title(li) + '"';
         };
         var close_menu = function() {
@@ -288,12 +289,13 @@
             } else {
                 $("#undo").text("Undo").addClass("disabled");
             }
-            if ($("#list > li").length > 0) {
+            if (all_items().length > 0) {
                 $("#clear").removeClass("disabled");
             } else {
                 $("#clear").addClass("disabled");
             }
         });
+        $("#list").empty();
 % for item in items:
         add_item(${item.title|json,n}, ${'true' if item.checked else 'false'}, ${item.id});
 % endfor
@@ -303,22 +305,51 @@
 </head>
 <body>
   <div data-role="page">
-    <div data-role="header" data-theme="b">
+    <div data-role="header" data-theme="b" id="header">
       <h1>Shopping List</h1>
-      <a href="#menu" class="ui-btn-right" data-icon="grid" data-rel="popup" data-position-to="origin">Menu</a>
+      <script>
+        document.write(
+          '<a href="#menu" class="ui-btn-right" data-icon="grid" data-rel="popup" data-position-to="origin">Menu</a>'
+        );
+      </script>
     </div>
     <div data-role="popup" id="menu" data-theme="a" data-tolerance="44,4,30,15" data-history="false">
       <ul data-role="listview" data-inset="true" data-theme="a">
-        <li data-icon="false"><a href="#" id="undo">Undo</a></li>
-        <li data-icon="false"><a href="#" id="sort">Sort list</a></li>
-        <li data-icon="false"><a href="#" id="clear">Clear list</a></li>
+        <script>
+          document.write('<li data-icon="false"><a href="#" id="undo">Undo</a></li>');
+          document.write('<li data-icon="false"><a href="#" id="sort">Sort list</a></li>');
+          document.write('<li data-icon="false"><a href="#" id="clear">Clear list</a></li>');
+        </script>
       </ul>
     </div>
     <div class="ui-content" role="main" id="main">
-      <ul id="list" data-role="listview" data-theme="d" data-split-theme="d" data-split-icon="delete">
-      </ul>
-      <form class="add-item-row">
-        <input id="new-item" type="text" autocomplete="off">
+      <form method="post" action="">
+        <ul id="list" data-role="listview" data-theme="d" data-split-theme="d" data-split-icon="delete">
+% for item in items:
+          <noscript>
+            <li>
+              <form method="post" action="">
+% if item.checked:
+                <button type="submit" name="uncheck" value="${item.id}">
+                  [X]
+                </button>
+% else:
+                <button type="submit" name="check" value="${item.id}">
+                  [ ]
+                </button>
+% endif
+                <a class="item">${item.title}</a>
+                <button type="submit" name="remove" value="${item.id}">
+                  (remove)
+                </button>
+              </form>
+            </li>
+          </noscript>
+% endfor
+        </ul>
+      </form>
+      <form class="add-item-row" method="post" action="">
+        <input id="new-item" name="add" type="text" autocomplete="off">
         <div id="add-item" class="side-btn ui-btn">
           <input type="submit" data-type="button" data-icon="plus" data-theme="b" value="Add" data-iconpos="notext">
         </div>

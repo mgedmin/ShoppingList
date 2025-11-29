@@ -2,7 +2,7 @@ import unittest
 
 import transaction
 from pyramid import testing
-from pyramid.httpexceptions import HTTPNotFound
+from pyramid.httpexceptions import HTTPFound, HTTPNotFound
 
 from .models import (
     Base,
@@ -51,6 +51,65 @@ class TestViews(BaseTest):
         request = self.dummy_request()
         info = main_view(request)
         self.assertEqual(len(info["items"]), 2)
+
+    def test_main_view_add_item(self):
+        from .views import main_view
+
+        request = self.dummy_request(post=dict(add="aitemu"))
+        response = main_view(request)
+        self.assertIsInstance(response, HTTPFound)
+        item = self.session.query(ListItem).filter_by(title="aitemu").one()
+        self.assertEqual(item.title, "aitemu")
+        self.assertEqual(item.checked, False)
+
+    def test_main_view_remove_item(self):
+        from .views import main_view
+
+        item = self.session.query(ListItem).filter_by(title="bread").one()
+        request = self.dummy_request(post=dict(remove=item.id))
+        response = main_view(request)
+        self.assertIsInstance(response, HTTPFound)
+        self.assertEqual(self.session.query(ListItem).count(), 1)
+
+    def test_main_view_remove_item_not_found(self):
+        from .views import main_view
+
+        request = self.dummy_request(post=dict(remove="no such id"))
+        response = main_view(request)
+        self.assertIsInstance(response, HTTPFound)
+        self.assertEqual(self.session.query(ListItem).count(), 2)
+
+    def test_main_view_check_item(self):
+        from .views import main_view
+
+        item = self.session.query(ListItem).filter_by(title="bread").one()
+        request = self.dummy_request(post=dict(check=item.id))
+        response = main_view(request)
+        self.assertIsInstance(response, HTTPFound)
+        self.assertEqual(item.checked, True)
+
+    def test_main_view_check_item_not_found(self):
+        from .views import main_view
+
+        request = self.dummy_request(post=dict(check="no such id"))
+        response = main_view(request)
+        self.assertIsInstance(response, HTTPFound)
+
+    def test_main_view_uncheck_item(self):
+        from .views import main_view
+
+        item = self.session.query(ListItem).filter_by(title="juice").one()
+        request = self.dummy_request(post=dict(uncheck=item.id))
+        response = main_view(request)
+        self.assertIsInstance(response, HTTPFound)
+        self.assertEqual(item.checked, False)
+
+    def test_main_view_uncheck_item_not_found(self):
+        from .views import main_view
+
+        request = self.dummy_request(post=dict(uncheck="no such id"))
+        response = main_view(request)
+        self.assertIsInstance(response, HTTPFound)
 
     def test_list_items(self):
         from .views import list_items
@@ -127,7 +186,7 @@ class TestViews(BaseTest):
         request = self.dummy_request()
         request.matchdict["id"] = u"12345xyzzy"
         info = remove_item(request)
-        self.assertTrue(isinstance(info, HTTPNotFound))
+        self.assertIsInstance(info, HTTPNotFound)
 
     def test_check_item(self):
         from .models import ListItem
@@ -146,7 +205,7 @@ class TestViews(BaseTest):
         request = self.dummy_request()
         request.matchdict["id"] = u"12345xyzzy"
         info = check_item(request)
-        self.assertTrue(isinstance(info, HTTPNotFound))
+        self.assertIsInstance(info, HTTPNotFound)
 
     def test_uncheck_item(self):
         from .models import ListItem
@@ -165,7 +224,7 @@ class TestViews(BaseTest):
         request = self.dummy_request()
         request.matchdict["id"] = u"12345xyzzy"
         info = uncheck_item(request)
-        self.assertTrue(isinstance(info, HTTPNotFound))
+        self.assertIsInstance(info, HTTPNotFound)
 
     def test_clear_list(self):
         from .models import ListItem
