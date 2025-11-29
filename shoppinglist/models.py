@@ -1,7 +1,6 @@
-from sqlalchemy import Column, Integer, Text, Boolean, engine_from_config
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker
 import zope.sqlalchemy
+from sqlalchemy import Boolean, Column, Integer, Text, engine_from_config
+from sqlalchemy.orm import declarative_base, sessionmaker
 
 
 Base = declarative_base()

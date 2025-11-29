@@ -1,4 +1,4 @@
-from pyramid.static import QueryStringCacheBuster, ManifestCacheBuster
+from pyramid.static import ManifestCacheBuster, QueryStringCacheBuster
 
 
 class ChecksumCacheBuster(QueryStringCacheBuster, ManifestCacheBuster):
