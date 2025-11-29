@@ -47,7 +47,6 @@ setuptools==80.9.0
     # via
     #   pyramid
     #   zope-deprecation
-    #   zope-sqlalchemy
 sqlalchemy==1.4.54
     # via
     #   shoppinglist
@@ -67,11 +66,11 @@ webob==1.8.9
     # via pyramid
 zope-deprecation==6.0
     # via pyramid
-zope-interface==8.0.1
+zope-interface==8.1.1
     # via
     #   pyramid
     #   pyramid-retry
     #   transaction
     #   zope-sqlalchemy
-zope-sqlalchemy==4.0
+zope-sqlalchemy==4.1
     # via shoppinglist
