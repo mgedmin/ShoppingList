@@ -32,6 +32,7 @@ class BaseTest(unittest.TestCase):
 
     def tearDown(self):
         transaction.abort()
+        self.engine.dispose()
         testing.tearDown()
 
     def dummy_request(self, **kwargs):
