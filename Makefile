@@ -12,6 +12,9 @@ all: $(default_targets)         ##: build the thing
 include help.mk
 HELP_WIDTH = 30
 
+# pkg_resources is deprecated
+export PYTHONWARNINGS=ignore::UserWarning:pyramid.path
+
 .PHONY: run
 run: $(db) $(static_manifest)   ##: start a local dev server
 	uv run pserve development.ini --reload
