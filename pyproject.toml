@@ -8,8 +8,6 @@ authors = [
 readme = "README.rst"
 keywords = ["web", "wsgi", "pyramid", "shopping", "list"]
 classifiers = [
-    "Programming Language :: Python :: 3.10",
-    "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
     "Programming Language :: Python :: 3.14",
@@ -18,7 +16,7 @@ classifiers = [
     "Topic :: Internet :: WWW/HTTP :: WSGI :: Application",
 ]
 license = "GPL-2.0-or-later"
-requires-python = ">=3.10"
+requires-python = ">=3.12"
 dependencies = [
     "SQLAlchemy < 2",
     "markupsafe",

@@ -20,23 +20,21 @@ jobs:
     strategy:
       matrix:
         python-version:
-          - "3.10"
-          - "3.11"
           - "3.12"
           - "3.13"
           - "3.14"
 
     steps:
       - name: Git clone
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: "${{ matrix.python-version }}"
 
       - name: Pip cache
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: ~/.cache/pip
           key: ${{ runner.os }}-pip-${{ matrix.python-version }}-${{ hashFiles('requirements.txt', 'setup.py') }}
@@ -49,7 +47,7 @@ jobs:
           python -m pip install -U pip
           python -m pip install -U setuptools wheel
           python -m pip install -U pytest coverage
-          python -m pip install -e .[testing] -c requirements.txt
+          python -m pip install -e '.[testing]' -c requirements.txt
 
       - name: Run tests
         run: coverage run -m pytest
