@@ -42,7 +42,7 @@ var:
 
 .PHONY: update-all-packages
 update-all-packages:            ##: upgrade all Python packages to latest versions
-	uv sync --upgrade
+	uv sync --upgrade --resolution=highest
 	$(MAKE) update-requirements
 
 .PHONY: update-requirements
